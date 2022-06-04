@@ -17,8 +17,7 @@ CREATE TABLE Film_Rec_System.Film (
     `Poster` text NULL,
     `Description` text NULL,
     `Duration` int NULL,
-    `ProductionYear` numeric(4) NULL CHECK (`ProductionYear` >= 1895),
-    `MinimalAgeAllowed` numeric(2) NOT NULL CHECK (`MinimalAgeAllowed` BETWEEN  0 AND 99)
+    `ProductionYear` numeric(4) NULL CHECK (`ProductionYear` >= 1895)
 );
 
 CREATE TABLE Film_Rec_System.Role (
@@ -62,8 +61,8 @@ CREATE TABLE Film_Rec_System.Country_Film_INT (
 CREATE TABLE Film_Rec_System.User (
     `UserID` int AUTO_INCREMENT PRIMARY KEY,
     `Username` varchar(63) NOT NULL UNIQUE,
-    `DateOfBirth` date NOT NULL,
-    `Password` varchar(255) NOT NULL
+    `Password` blob NOT NULL,
+    `Hash` blob NOT NULL
 );
 
 CREATE TABLE Film_Rec_System.Discussion (
