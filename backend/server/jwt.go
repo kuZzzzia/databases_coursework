@@ -1,9 +1,10 @@
-package main
+package server
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/cristalhq/jwt"
 	"log"
 	"strconv"
 	"time"
@@ -43,31 +44,31 @@ func generateJWT(user *User) string {
 }
 
 func verifyJWT(tokenStr string) (int, error) {
-	token, err := jwt.Parse([]byte(tokenStr))
+	token, err := jwt.Parse([]byte(tokenStr), jwtVerifier)
 	if err != nil {
 		log.Println("Error parsing JWT verifier : " + tokenStr + " " + err.Error())
-		return 0, err
+		return -1, err
 	}
 
-	if err := jwtVerifier.Verify(token.Payload(), token.Signature()); err != nil {
+	if err := jwtVerifier.Verify(token); err != nil {
 		log.Println("Error verifying token : " + err.Error())
-		return 0, err
+		return -1, err
 	}
 
-	var claims jwt.StandardClaims
-	if err := json.Unmarshal(token.RawClaims(), &claims); err != nil {
+	var claims jwt.RegisteredClaims
+	if err := json.Unmarshal(token.Claims(), &claims); err != nil {
 		log.Println("Error unmarshalling JWT claims : " + err.Error())
-		return 0, err
+		return -1, err
 	}
 
 	if notExpired := claims.IsValidAt(time.Now()); !notExpired {
-		return 0, errors.New("Token expired.")
+		return -1, errors.New("Token expired.")
 	}
 
 	id, err := strconv.Atoi(claims.ID)
 	if err != nil {
 		log.Println("Error converting claims ID to number : " + claims.ID + " " + err.Error())
-		return 0, errors.New("ID in token is not valid")
+		return -1, errors.New("ID in token is not valid")
 	}
 	return id, err
 }

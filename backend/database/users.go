@@ -1,42 +1,11 @@
-package main
+package database
 
 import (
+	"../server"
 	"crypto/rand"
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
-
-var db *sql.DB
-
-func OpenDBConnection() {
-	var err error
-	db, err = sql.Open("mysql", "maks:password@tcp(127.0.0.1:3306)/Film_Rec_System")
-
-	if err != nil {
-		log.Panicln(err.Error())
-	}
-}
-
-func GetDBConnection() *sql.DB { return db }
-
-func InsertStmt(query string, args []interface{}) error {
-	var (
-		insert *sql.Rows
-		err    error
-	)
-
-	if args != nil {
-		insert, err = db.Query(query)
-	} else {
-		insert, err = db.Query(query, args)
-	}
-
-	defer insert.Close()
-
-	return err
-}
 
 func generateSalt() ([]byte, error) {
 	salt := make([]byte, 16)
@@ -47,7 +16,7 @@ func generateSalt() ([]byte, error) {
 	return salt, nil
 }
 
-func AddUser(user *User) error {
+func AddUser(user *server.User) error {
 	salt, err := generateSalt()
 	if err != nil {
 		return err
@@ -69,8 +38,8 @@ func AddUser(user *User) error {
 	return err
 }
 
-func Authenticate(username, password string) (*User, error) {
-	user := new(User)
+func Authenticate(username, password string) (*server.User, error) {
+	user := new(server.User)
 	db := GetDBConnection()
 	err := db.QueryRow("SELECT UserID, Password FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword)
 	if err != nil {
@@ -79,6 +48,17 @@ func Authenticate(username, password string) (*User, error) {
 
 	salted := append([]byte(password), user.Salt...)
 	if err = bcrypt.CompareHashAndPassword(user.HashedPassword, salted); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func FetchUser(id int) (*server.User, error) {
+	user := new(server.User)
+	user.ID = id
+	err := db.QueryRow("SELECT Username FROM User WHERE UserID = ?", id).Scan(&user.Username)
+	if err != nil {
+		log.Println("Error fetching user")
 		return nil, err
 	}
 	return user, nil
