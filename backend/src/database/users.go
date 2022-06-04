@@ -40,7 +40,7 @@ func AddUser(user *User) error {
 
 	db := GetDBConnection()
 
-	insert, err := db.Query("INSERT INTO USER(Username, Password, Hash) VALUES (?, ?, ?)", user.Username, user.HashedPassword, user.Salt)
+	insert, err := db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)", user.Username, user.HashedPassword, user.Salt)
 	defer insert.Close()
 	if err != nil {
 		return err
