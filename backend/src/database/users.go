@@ -38,7 +38,7 @@ func AddUser(user *User) error {
 	user.Salt = salt
 	user.HashedPassword = hashedPassword
 
-	err = InsertStmt("INSERT INTO USER(Username, Password) VALUES (?, ?)", []interface{}{user.Username, user.HashedPassword})
+	err = InsertStmt("INSERT INTO USER(Username, Password, Hash) VALUES (?, ?, ?)", []interface{}{user.Username, user.HashedPassword, user.Salt})
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func AddUser(user *User) error {
 func Authenticate(username, password string) (*User, error) {
 	user := new(User)
 	db := GetDBConnection()
-	err := db.QueryRow("SELECT UserID, Password FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword)
+	err := db.QueryRow("SELECT UserID, Password FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword, &user.Salt)
 	if err != nil {
 		return nil, err
 	}
