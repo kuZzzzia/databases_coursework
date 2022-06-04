@@ -18,20 +18,3 @@ func OpenDBConnection() {
 }
 
 func GetDBConnection() *sql.DB { return db }
-
-func InsertStmt(query string, args []interface{}) error {
-	var (
-		insert *sql.Rows
-		err    error
-	)
-
-	if args != nil {
-		insert, err = db.Query(query)
-	} else {
-		insert, err = db.Query(query, args)
-	}
-
-	defer insert.Close()
-
-	return err
-}

@@ -8,8 +8,8 @@ import (
 
 type User struct {
 	ID             int
-	Username       string `binding:"required, min=5, max=63"`
-	Password       string `binding:"required, min=7, max=63"`
+	Username       string `binding:"required,min=5,max=63"`
+	Password       string `binding:"required,min=7,max=63"`
 	HashedPassword []byte `json:"-"`
 	Salt           []byte `json:"-"`
 }
@@ -38,7 +38,10 @@ func AddUser(user *User) error {
 	user.Salt = salt
 	user.HashedPassword = hashedPassword
 
-	err = InsertStmt("INSERT INTO USER(Username, Password, Hash) VALUES (?, ?, ?)", []interface{}{user.Username, user.HashedPassword, user.Salt})
+	db := GetDBConnection()
+
+	insert, err := db.Query("INSERT INTO USER(Username, Password, Hash) VALUES (?, ?, ?)", user.Username, user.HashedPassword, user.Salt)
+	defer insert.Close()
 	if err != nil {
 		return err
 	}
@@ -48,7 +51,7 @@ func AddUser(user *User) error {
 func Authenticate(username, password string) (*User, error) {
 	user := new(User)
 	db := GetDBConnection()
-	err := db.QueryRow("SELECT UserID, Password FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword, &user.Salt)
+	err := db.QueryRow("SELECT UserID, Password, Hash FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword, &user.Salt)
 	if err != nil {
 		return nil, err
 	}
