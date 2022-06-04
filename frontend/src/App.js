@@ -1,29 +1,33 @@
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext from './db/auth-context';
+import HomePage from "./pages/HomePage";
+import AuthPage from "./pages/AuthPage";
+import Layout from './components/Layout/Layout';
+import UserPage from "./pages/UserPage";
 
 function App() {
-  const authContext = useContext();
+  const authContext = useContext(AuthContext);
 
   return (
       <Layout>
-          <Switch>
-              <Route path="/" exact>
+          <Routes>
+              <Route path='/'>
                   <HomePage/>
               </Route>
               {!authContext.loggedIn && (
-                  <Route path="/auth">
+                  <Route path='/auth'>
                       <AuthPage />
                   </Route>
               )}
-              <Route path="/profile">
+              <Route path='/profile'>
                   {authContext.loggedIn && <UserPage />}
-                  {!authContext.loggedIn && <Redirect to="/auth" />}
+                  {!authContext.loggedIn && <Navigate to="/auth" />}
               </Route>
-              <Route path="*">
-                  <Redirect to="/"/>
+              <Route path='*'>
+                  <Navigate to="/"/>
               </Route>
-          </Switch>
+          </Routes>
       </Layout>
   );
 }
