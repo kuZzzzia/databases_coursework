@@ -42,7 +42,7 @@ func signIn(ctx *gin.Context) {
 	})
 }
 
-func autorization(ctx *gin.Context) {
+func authorization(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	if authHeader == "" {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing."})
