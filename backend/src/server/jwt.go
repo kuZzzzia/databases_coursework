@@ -1,6 +1,7 @@
 package server
 
 import (
+	"../database"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,7 +31,7 @@ func jwtSetup() {
 	}
 }
 
-func generateJWT(user *User) string {
+func generateJWT(user *database.User) string {
 	claims := &jwt.RegisteredClaims{
 		ID:        fmt.Sprint(user.ID),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),

@@ -1,11 +1,18 @@
 package database
 
 import (
-	"../server"
 	"crypto/rand"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
+
+type User struct {
+	ID             int
+	Username       string `binding:"required, min=5, max=63"`
+	Password       string `binding:"required, min=7, max=63"`
+	HashedPassword []byte `json:"-"`
+	Salt           []byte `json:"-"`
+}
 
 func generateSalt() ([]byte, error) {
 	salt := make([]byte, 16)
@@ -16,7 +23,7 @@ func generateSalt() ([]byte, error) {
 	return salt, nil
 }
 
-func AddUser(user *server.User) error {
+func AddUser(user *User) error {
 	salt, err := generateSalt()
 	if err != nil {
 		return err
@@ -38,8 +45,8 @@ func AddUser(user *server.User) error {
 	return err
 }
 
-func Authenticate(username, password string) (*server.User, error) {
-	user := new(server.User)
+func Authenticate(username, password string) (*User, error) {
+	user := new(User)
 	db := GetDBConnection()
 	err := db.QueryRow("SELECT UserID, Password FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword)
 	if err != nil {
@@ -53,8 +60,8 @@ func Authenticate(username, password string) (*server.User, error) {
 	return user, nil
 }
 
-func FetchUser(id int) (*server.User, error) {
-	user := new(server.User)
+func FetchUser(id int) (*User, error) {
+	user := new(User)
 	user.ID = id
 	err := db.QueryRow("SELECT Username FROM User WHERE UserID = ?", id).Scan(&user.Username)
 	if err != nil {

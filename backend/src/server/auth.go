@@ -9,16 +9,8 @@ import (
 	"strings"
 )
 
-type User struct {
-	ID             int
-	Username       string `binding:"required, min=5, max=63"`
-	Password       string `binding:"required, min=7, max=63"`
-	HashedPassword []byte `json:"-"`
-	Salt           []byte `json:"-"`
-}
-
 func signUp(ctx *gin.Context) {
-	user := new(User)
+	user := new(database.User)
 	if err := ctx.Bind(user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -34,7 +26,7 @@ func signUp(ctx *gin.Context) {
 }
 
 func signIn(ctx *gin.Context) {
-	user := new(User)
+	user := new(database.User)
 	if err := ctx.Bind(user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -79,14 +71,14 @@ func autorization(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func currentUser(ctx *gin.Context) (*User, error) {
+func currentUser(ctx *gin.Context) (*database.User, error) {
 	var err error
 	_user, exists := ctx.Get("user")
 	if !exists {
 		log.Println("Current context user not set : " + err.Error())
 		return nil, err
 	}
-	user, ok := _user.(*User)
+	user, ok := _user.(*database.User)
 	if !ok {
 		log.Println("Current context user not set : " + err.Error())
 		return nil, err
