@@ -1,5 +1,7 @@
 package main
 
+import "./src/server"
+
 func main() {
-	Start()
+	server.Start()
 }

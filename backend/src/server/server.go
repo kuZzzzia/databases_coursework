@@ -1,6 +1,7 @@
 package server
 
 import (
+	"../database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -24,8 +25,8 @@ func setUpRouter() *gin.Engine {
 func Start() {
 	jwtSetup()
 
-	OpenDBConnection()
-	defer GetDBConnection().Close()
+	database.OpenDBConnection()
+	defer database.GetDBConnection().Close()
 
 	router := setUpRouter()
 
