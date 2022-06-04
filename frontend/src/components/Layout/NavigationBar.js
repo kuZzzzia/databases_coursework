@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import AuthContext from '../../db/auth-context';
 
 const NavigationBar = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const authContext = useContext(AuthContext);
 
@@ -12,7 +12,7 @@ const NavigationBar = () => {
 
     const logoutHandler = () => {
         authContext.logout();
-        history.replace('/');
+        navigate.replace('/');
     };
 
     return (
