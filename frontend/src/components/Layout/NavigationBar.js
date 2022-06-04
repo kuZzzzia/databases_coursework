@@ -12,7 +12,7 @@ const NavigationBar = () => {
 
     const logoutHandler = () => {
         authContext.logout();
-        navigate.replace('/');
+        navigate('/');
     };
 
     return (

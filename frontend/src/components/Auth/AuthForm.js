@@ -54,7 +54,7 @@ const AuthForm = () => {
                 }
             } else {
                 authContext.login(data.jwt)
-                navigate.replace('/');
+                navigate('/');
             }
         } catch (error) {
             setErrors({"error": error.message});

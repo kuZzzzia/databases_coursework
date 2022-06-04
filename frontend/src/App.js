@@ -12,21 +12,19 @@ function App() {
   return (
       <Layout>
           <Routes>
-              <Route path='/'>
-                  <HomePage/>
-              </Route>
+              <Route path='/' element={<HomePage />} />
               {!authContext.loggedIn && (
-                  <Route path='/auth'>
+                  <Route path='/auth' element={
                       <AuthPage />
-                  </Route>
+                  }/>
               )}
-              <Route path='/profile'>
-                  {authContext.loggedIn && <UserPage />}
-                  {!authContext.loggedIn && <Navigate to="/auth" />}
-              </Route>
-              <Route path='*'>
+              <Route path='/profile' element={
+                  authContext.loggedIn ?
+                      <UserPage /> : <Navigate to="/auth" />
+              }/>
+              <Route path='*' element={
                   <Navigate to="/"/>
-              </Route>
+              }/>
           </Routes>
       </Layout>
   );
