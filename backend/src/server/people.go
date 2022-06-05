@@ -4,6 +4,7 @@ import (
 	"../database"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func getPeople(ctx *gin.Context) {
@@ -23,5 +24,30 @@ func getPeople(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": people,
+	})
+}
+
+func getPerson(ctx *gin.Context) {
+	paramID := ctx.Param("id")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid ID."})
+		return
+	}
+	person, roles, films, err := database.FetchPerson(id)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "No person with such ID."})
+		return
+	}
+	if roles == nil {
+		roles = []*database.Role{}
+	}
+	if films == nil {
+		films = []*database.Film{}
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"person": person,
+		"films":  films,
+		"roles":  roles,
 	})
 }
