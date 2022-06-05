@@ -10,7 +10,7 @@ func setUpRouter() *gin.Engine {
 	// default router
 	router := gin.Default()
 
-	//router.StaticFS("/images", http.Dir("../images"))
+	router.StaticFS("/images", http.Dir("./src/images"))
 
 	api := router.Group("/api")
 	{
