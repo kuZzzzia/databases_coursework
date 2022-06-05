@@ -21,6 +21,11 @@ func setUpRouter() *gin.Engine {
 		api.POST("/films", getFilms)
 	}
 
+	main := router.Group("/")
+	{
+		main.GET("/people/:id", getPerson)
+	}
+
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })
 
 	return router
