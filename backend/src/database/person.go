@@ -46,7 +46,7 @@ func FetchPeople(pattern string) ([]*Person, error) {
 }
 
 func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
-	var person *Person
+	person := new(Person)
 
 	err := db.QueryRow(
 		"SELECT PersonID, FullName, AlternativeName, Photo, DateOfBirth FROM Person WHERE PersonID = ?",
@@ -56,32 +56,32 @@ func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 		return nil, nil, nil, err
 	}
 
-	var films []*Film
+	//var films []*Film
+	//
+	//results, err := db.Query(
+	//	"SELECT FilmID, FullName, ProductionYear FROM Film WHERE PersonID = ?",
+	//	id)
+	//if err != nil {
+	//	log.Println("Error fetching films")
+	//	return nil, nil, nil, err
+	//}
 
-	results, err := db.Query(
-		"SELECT FilmID, FullName, ProductionYear FROM Film WHERE PersonID = ?",
-		id)
-	if err != nil {
-		log.Println("Error fetching films")
-		return nil, nil, nil, err
-	}
-
-	defer results.Close()
-	for results.Next() {
-		film := new(Film)
-
-		err = results.Scan(&film.ID, &film.Name, &film.Year)
-		if err != nil {
-			log.Println("Error fetching films")
-			return nil, nil, nil, err
-		}
-
-		films = append(films, film)
-	}
+	//defer results.Close()
+	//for results.Next() {
+	//	film := new(Film)
+	//
+	//	err = results.Scan(&film.ID, &film.Name, &film.Year)
+	//	if err != nil {
+	//		log.Println("Error fetching films")
+	//		return nil, nil, nil, err
+	//	}
+	//
+	//	films = append(films, film)
+	//}
 
 	var roles []*Role
 
-	results, err = db.Query(
+	results, err := db.Query(
 		"SELECT r.FilmID, r.CharacterName, f.FullName, f.ProductionYear FROM (SELECT FilmID, CharacterName From Role WHERE PersonID = ?) AS r LEFT JOIN Film AS f ON f.FilmID = r.FilmID ORDER BY f.ProductionYear DESC",
 		id)
 	if err != nil {
@@ -102,5 +102,5 @@ func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 		roles = append(roles, role)
 	}
 
-	return person, roles, films, nil
+	return person, roles, nil, nil
 }
