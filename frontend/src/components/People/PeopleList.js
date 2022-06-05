@@ -6,7 +6,7 @@ const PeopleList = (props) => {
             {props.people.map((person) => (
                 <PersonRow
                     key={person.ID}
-                    actor={person} />
+                    person={person} />
             ))}
         </ul>
     );

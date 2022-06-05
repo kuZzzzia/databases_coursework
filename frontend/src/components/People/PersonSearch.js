@@ -30,7 +30,7 @@ const PersonSearch = () => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'No actors found';
+                let errorText = 'No people found';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }

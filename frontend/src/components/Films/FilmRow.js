@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const FilmRow = (props) => {
-    const poster = props.film.image;
+    const poster = props.film.poster;
     const name = props.film.name;
     const altName = props.film.altName;
     const year = props.film.year;

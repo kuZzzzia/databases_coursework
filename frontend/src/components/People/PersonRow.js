@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 
 const PersonRow = (props) => {
-    const photo = props.actor.image;
-    const name = props.actor.name;
-    const altName = props.actor.altName;
-    const date = props.actor.date;
+    const photo = props.person.image;
+    const name = props.person.name;
+    const altName = props.person.altName;
+    const date = props.person.date;
 
     return (
         <div className="card mb-5 pb-2">
