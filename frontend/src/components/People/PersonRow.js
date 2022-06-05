@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const ActorRow = (props) => {
+const PersonRow = (props) => {
     const photo = props.actor.image;
     const name = props.actor.name;
     const altName = props.actor.altName;
@@ -19,4 +19,4 @@ const ActorRow = (props) => {
     );
 };
 
-export default ActorRow;
+export default PersonRow;

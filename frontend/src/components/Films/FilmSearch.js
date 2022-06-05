@@ -68,7 +68,7 @@ const FilmSearch = () => {
                 <form onSubmit={submitHandler}>
                     <div className="form-row">
                         <div className="col-9">
-                            <input id="username" type="text" className="form-control" placeholder={"Найти персону..."} required ref={filmRef} ></input>
+                            <input id="username" type="text" className="form-control" placeholder={"Найти фильм..."} required ref={filmRef} ></input>
                         </div>
                         <div className="col">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>

@@ -37,7 +37,7 @@ const NavigationBar = () => {
                 <div className="d-flex flex-row justify-content-end">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/actors">Actors</Link>
+                            <Link className="nav-link" to="/people">People</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/films">Films</Link>
