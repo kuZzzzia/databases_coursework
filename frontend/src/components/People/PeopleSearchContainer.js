@@ -1,10 +1,10 @@
-import PersonRow from "./PersonRow";
+import PersonCard from "./PersonCard";
 
-const PeopleList = (props) => {
+const PeopleSearchContainer = (props) => {
     return (
         <div className="card-columns">
             {props.people.map((person) => (
-                <PersonRow
+                <PersonCard
                     key={person.ID}
                     person={person} />
             ))}
@@ -12,4 +12,4 @@ const PeopleList = (props) => {
     );
 };
 
-export default PeopleList;
+export default PeopleSearchContainer;

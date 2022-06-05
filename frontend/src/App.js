@@ -7,6 +7,7 @@ import Layout from './components/Layout/Layout';
 import UserPage from "./pages/UserPage";
 import PersonSearchPage from "./pages/PersonSearchPage"
 import FilmSearchPage from "./pages/FilmSearchPage"
+import Person from "./components/People/Person";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -25,6 +26,7 @@ function App() {
                       <UserPage /> : <Navigate to="/auth" />
               }/>
               <Route path='/people' element={<PersonSearchPage />} />
+              <Route path="/people/:id(\\d+)"  element={<Person />} />
               <Route path='/films' element={<FilmSearchPage />} />
               <Route path='*' element={
                   <Navigate to="/"/>

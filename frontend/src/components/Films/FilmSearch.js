@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
 import Errors from "../Errors/Errors";
-import FilmsList from "./FilmsList";
+import FilmSearchContainer from "./FilmSearchContainer";
 
 const FilmSearch = () => {
     const [searchStatus, setSearchStatus] = useState(false);
@@ -52,7 +52,7 @@ const FilmSearch = () => {
         films.length === 0 ?
             <p>No films found</p>
             :
-            <FilmsList
+            <FilmSearchContainer
                 films={films}
             />
         : <p></p>;
