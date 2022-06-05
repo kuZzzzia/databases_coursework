@@ -2,7 +2,7 @@ import PersonRow from "./PersonRow";
 
 const PeopleList = (props) => {
     return (
-        <div className="card-group">
+        <div className="card-columns">
             {props.people.map((person) => (
                 <PersonRow
                     key={person.ID}
