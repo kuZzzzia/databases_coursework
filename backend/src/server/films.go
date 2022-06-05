@@ -18,6 +18,10 @@ func getFilms(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	if films == nil {
+		films = []*database.Film{}
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": films,
 	})
