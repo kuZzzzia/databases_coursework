@@ -17,7 +17,7 @@ func FetchFilms(pattern string) (*[]Film, error) {
 
 	results, err := db.Query(
 		"SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear FROM Film WHERE FullName = ? OR AlternativeName = ?",
-		pattern)
+		pattern, pattern)
 	if err != nil {
 		log.Println("Error fetching films")
 		return nil, err
