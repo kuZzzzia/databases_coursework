@@ -2,13 +2,13 @@ import PersonRow from "./PersonRow";
 
 const PeopleList = (props) => {
     return (
-        <ul>
+        <div className="card-group">
             {props.people.map((person) => (
                 <PersonRow
                     key={person.ID}
                     person={person} />
             ))}
-        </ul>
+        </div>
     );
 };
 
