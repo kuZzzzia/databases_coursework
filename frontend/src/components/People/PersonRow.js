@@ -8,7 +8,7 @@ const PersonRow = (props) => {
     const id = ":" + props.person.ID;
 
     return (
-        <div className="card mb-5 pb-2" style="max-width: 18rem;">
+        <div className="card mb-5 pb-2" style={{maxWidth: '18rem'}}>
             <img className="card-img-left" src={photo}  alt={name}/>
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>
