@@ -12,7 +12,7 @@ func getActors(ctx *gin.Context) {
 	if err = ctx.Bind(search); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	actors := new([]database.Person)
+	var actors []*database.Person
 
 	if actors, err = database.FetchPeople(search.Pattern); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
