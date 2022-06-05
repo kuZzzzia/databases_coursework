@@ -10,6 +10,8 @@ func setUpRouter() *gin.Engine {
 	// default router
 	router := gin.Default()
 
+	//router.StaticFS("/images", http.Dir("../images"))
+
 	api := router.Group("/api")
 	{
 		api.GET("")
@@ -21,6 +23,8 @@ func setUpRouter() *gin.Engine {
 	authorized.Use(authorization)
 	{
 		authorized.GET("/profile", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{}) })
+		authorized.POST("/actors", getActors)
+		authorized.POST("/films", getFilms)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })

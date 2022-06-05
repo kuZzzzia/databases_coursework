@@ -18,3 +18,7 @@ func OpenDBConnection() {
 }
 
 func GetDBConnection() *sql.DB { return db }
+
+type Search struct {
+	Pattern string `binding:"required,min=1,max=100"`
+}
