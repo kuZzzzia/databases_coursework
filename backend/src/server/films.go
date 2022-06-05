@@ -12,7 +12,7 @@ func getFilms(ctx *gin.Context) {
 	if err = ctx.Bind(search); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	films := new([]database.Film)
+	var films []*database.Film
 
 	if films, err = database.FetchFilms(search.Pattern); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})

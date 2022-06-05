@@ -10,8 +10,8 @@ type Person struct {
 	Date    string
 }
 
-func FetchPeople(pattern string) (*[]Person, error) {
-	people := new([]Person)
+func FetchPeople(pattern string) ([]*Person, error) {
+	var people []*Person
 
 	results, err := db.Query(
 		"SELECT PersonID, FullName, AlternativeName, Photo, DateOfBirth FROM Person WHERE FullName = ? OR AlternativeName = ?",
@@ -24,7 +24,7 @@ func FetchPeople(pattern string) (*[]Person, error) {
 	defer results.Close()
 
 	for results.Next() {
-		var person Person
+		person := new(Person)
 
 		err = results.Scan(&person.ID, &person.Name, &person.AltName, &person.Photo, &person.Date)
 		if err != nil {
@@ -32,7 +32,7 @@ func FetchPeople(pattern string) (*[]Person, error) {
 			return nil, err
 		}
 
-		*people = append(*people, person)
+		people = append(people, person)
 	}
 
 	return people, nil

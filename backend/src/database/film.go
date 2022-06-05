@@ -12,8 +12,8 @@ type Film struct {
 	Year        int
 }
 
-func FetchFilms(pattern string) (*[]Film, error) {
-	films := new([]Film)
+func FetchFilms(pattern string) ([]*Film, error) {
+	var films []*Film
 
 	results, err := db.Query(
 		"SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear FROM Film WHERE FullName = ? OR AlternativeName = ?",
@@ -26,7 +26,7 @@ func FetchFilms(pattern string) (*[]Film, error) {
 	defer results.Close()
 
 	for results.Next() {
-		var film Film
+		film := new(Film)
 
 		err = results.Scan(&film.ID, &film.Name, &film.AltName, &film.Poster, &film.Duration, &film.Year)
 		if err != nil {
@@ -34,7 +34,7 @@ func FetchFilms(pattern string) (*[]Film, error) {
 			return nil, err
 		}
 
-		*films = append(*films, film)
+		films = append(films, film)
 	}
 
 	return films, nil
