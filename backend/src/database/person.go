@@ -15,7 +15,7 @@ func FetchPeople(pattern string) (*[]Person, error) {
 
 	results, err := db.Query(
 		"SELECT PersonID, FullName, AlternativeName, Photo, DateOfBirth FROM Person WHERE FullName = ? OR AlternativeName = ?",
-		pattern)
+		pattern, pattern)
 	if err != nil {
 		log.Println("Error fetching people")
 		return nil, err
