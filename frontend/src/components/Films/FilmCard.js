@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const FilmRow = (props) => {
+const FilmCard = (props) => {
     const poster = props.film.Poster;
     const name = props.film.Name;
     const altName = props.film.AltName;
@@ -22,4 +22,4 @@ const FilmRow = (props) => {
     );
 };
 
-export default FilmRow;
+export default FilmCard;

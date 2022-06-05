@@ -1,10 +1,10 @@
-import FilmRow from "./FilmRow";
+import FilmCard from "./FilmCard";
 
-const FilmsList = (props) => {
+const FilmSearchContainer = (props) => {
     return (
         <div className="card-columns">
             {props.films.map((film) => (
-                <FilmRow
+                <FilmCard
                     key={film.ID}
                     film={film} />
             ))}
@@ -12,4 +12,4 @@ const FilmsList = (props) => {
     );
 };
 
-export default FilmsList;
+export default FilmSearchContainer;

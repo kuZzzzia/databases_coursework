@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
 import Errors from "../Errors/Errors";
-import PeopleList from "./PeopleList";
+import PeopleSearchContainer from "./PeopleSearchContainer";
 
 const PersonSearch = () => {
     const [searchStatus, setSearchStatus] = useState(false);
@@ -52,7 +52,7 @@ const PersonSearch = () => {
         people.length === 0 ?
             <p>No people found</p>
             :
-            <PeopleList
+            <PeopleSearchContainer
                 people={people}
             />
         : <p></p>;
