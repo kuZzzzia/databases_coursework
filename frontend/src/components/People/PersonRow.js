@@ -5,7 +5,7 @@ const PersonRow = (props) => {
     const name = props.person.Name;
     const altName = props.person.AltName;
     const date = props.person.Date;
-    const id = props.person.ID;
+    const id = ":" + props.person.ID;
 
     return (
         <div className="card mb-5 pb-2">
@@ -14,7 +14,7 @@ const PersonRow = (props) => {
                 <h5 className="card-title">{name}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
                 <p className="card-text">Дата рождения: {date}</p>
-                <Link className="card-link-link" to="/films/:"{id}>View more</Link>
+                <Link className="card-link-link" to={id}>View more</Link>
             </div>
         </div>
     );
