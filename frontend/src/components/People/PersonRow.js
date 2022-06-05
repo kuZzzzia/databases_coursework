@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const PersonRow = (props) => {
-    const photo = props.person.Image;
+    const photo = props.person.Photo;
     const name = props.person.Name;
     const altName = props.person.AltName;
     const date = props.person.Date;
