@@ -42,12 +42,6 @@ const NavigationBar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/films">Films</Link>
                         </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/genres">Genres</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/countries">Countries</Link>
-                        </li>
                         {!loggedIn && (
                             <li className="nav-item">
                                 <Link className="nav-link" to="/auth">Login</Link>

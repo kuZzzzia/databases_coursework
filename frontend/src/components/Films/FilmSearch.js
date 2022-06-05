@@ -1,27 +1,27 @@
 import { useRef, useState } from "react";
 
 import Errors from "../Errors/Errors";
-import ActorsList from "./ActorsList";
+import FilmsList from "./FilmsList";
 
-const ActorSearch = () => {
+const FilmSearch = () => {
     const [searchStatus, setSearchStatus] = useState(false);
-    const [actors, setActors] = useState([]);
+    const [films, setFilms] = useState([]);
     const [errors, setErrors] = useState({});
 
-    const actorRef = useRef();
+    const filmRef = useRef();
 
     async function submitHandler(event) {
         event.preventDefault();
         setErrors({});
 
-        const actorValue = actorRef.current.value;
+        const filmValue = filmRef.current.value;
 
         try {
-            const response = await fetch("/api/actors",
+            const response = await fetch("/api/films",
                 {
                     method: 'POST',
                     body: JSON.stringify({
-                        Actor: actorValue,
+                        Film: filmValue,
                     }),
                     headers: {
                         'Content-Type': 'application/json',
@@ -41,23 +41,23 @@ const ActorSearch = () => {
                 }
             } else {
                 setSearchStatus(true);
-                setActors(data.data);
+                setFilms(data.data);
             }
         } catch (error) {
             setErrors({"error": error.message});
         }
     }
 
-    const actorsContent = searchStatus ?
-        actors.length === 0 ?
-            <p>No actors found</p>
+    const filmsContent = searchStatus ?
+        films.length === 0 ?
+            <p>No films found</p>
             :
-            <ActorsList
-                actors={actors}
+            <FilmsList
+                films={films}
             />
         : <p></p>;
 
-    const header = 'Actors';
+    const header = 'Films';
     const mainButtonText = 'Search';
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
 
@@ -68,7 +68,7 @@ const ActorSearch = () => {
                 <form onSubmit={submitHandler}>
                     <div className="form-row">
                         <div className="col-9">
-                            <input id="username" type="text" className="form-control" placeholder={"Найти персону..."} required ref={actorRef} ></input>
+                            <input id="username" type="text" className="form-control" placeholder={"Найти персону..."} required ref={filmRef} ></input>
                         </div>
                         <div className="col">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>
@@ -77,9 +77,9 @@ const ActorSearch = () => {
                 </form>
             </div>
             {errorContent}
-            {actorsContent}
+            {filmsContent}
         </section>
     );
 };
 
-export default ActorSearch;
+export default FilmSearch;
