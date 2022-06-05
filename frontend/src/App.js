@@ -5,6 +5,8 @@ import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import Layout from './components/Layout/Layout';
 import UserPage from "./pages/UserPage";
+import PersonSearchPage from "./pages/PersonSearchPage"
+import FilmSearchPage from "./pages/FilmSearchPage"
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -22,6 +24,8 @@ function App() {
                   authContext.loggedIn ?
                       <UserPage /> : <Navigate to="/auth" />
               }/>
+              <Route path='/people' element={<PersonSearchPage />} />
+              <Route path='/films' element={<FilmSearchPage />} />
               <Route path='*' element={
                   <Navigate to="/"/>
               }/>

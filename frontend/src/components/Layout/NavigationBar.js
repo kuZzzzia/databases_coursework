@@ -36,6 +36,12 @@ const NavigationBar = () => {
                 </div>
                 <div className="d-flex flex-row justify-content-end">
                     <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/people">People</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/films">Films</Link>
+                        </li>
                         {!loggedIn && (
                             <li className="nav-item">
                                 <Link className="nav-link" to="/auth">Login</Link>
