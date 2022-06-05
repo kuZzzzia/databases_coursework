@@ -9,7 +9,7 @@ const PersonRow = (props) => {
 
     return (
         <div className="card mb-5 pb-2" style={{maxWidth: '18rem'}}>
-            <img className="card-img-left" src={photo}  alt={name}/>
+            <img className="card-img-top" src={photo}  alt={name}/>
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>

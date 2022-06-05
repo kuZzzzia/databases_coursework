@@ -21,7 +21,7 @@ const FilmSearch = () => {
                 {
                     method: 'POST',
                     body: JSON.stringify({
-                        Film: filmValue,
+                        Pattern: filmValue,
                     }),
                     headers: {
                         'Content-Type': 'application/json',
