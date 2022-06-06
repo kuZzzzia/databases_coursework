@@ -40,7 +40,8 @@ func AddUser(user *User) error {
 
 	db := GetDBConnection()
 
-	insert, err := db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)", user.Username, user.HashedPassword, user.Salt)
+	insert, err := db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
+		user.Username, user.HashedPassword, user.Salt)
 	defer insert.Close()
 	if err != nil {
 		return err
@@ -51,7 +52,8 @@ func AddUser(user *User) error {
 func Authenticate(username, password string) (*User, error) {
 	user := new(User)
 	db := GetDBConnection()
-	err := db.QueryRow("SELECT UserID, Password, Hash FROM User WHERE Username = ?", username).Scan(&user.ID, &user.HashedPassword, &user.Salt)
+	err := db.QueryRow("SELECT UserID, Password, Hash FROM User WHERE Username = ?", username).
+		Scan(&user.ID, &user.HashedPassword, &user.Salt)
 	if err != nil {
 		return nil, err
 	}

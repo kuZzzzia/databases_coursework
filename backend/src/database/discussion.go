@@ -17,7 +17,7 @@ func FetchDiscussionsForFilm(id int) ([]*DiscussionItem, error) {
 	var discussion []*DiscussionItem
 
 	results, err := db.Query(
-		"SELECT DiscussionID, `Date`, Review, u.UserID, Username FROM (SELECT DiscussionID, `Date`, Review, UserID FROM Discussion WHERE FilmID = ?) AS d LEFT JOIN User AS u ON d.UserID = u.UserID ORDER BY d.Date",
+		"SELECT DiscussionID, `Date`, Review, UserID, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY d.Date",
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
