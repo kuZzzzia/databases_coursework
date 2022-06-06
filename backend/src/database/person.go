@@ -14,10 +14,11 @@ type Person struct {
 }
 
 type Role struct {
-	FilmID   int
-	Name     sql.NullString
-	FilmName string
-	Year     sql.NullInt16
+	FilmID     int
+	Name       sql.NullString
+	FilmName   string
+	Year       sql.NullInt16
+	FilmRating int
 }
 
 func FetchPeople(pattern string) ([]*Person, error) {
@@ -48,6 +49,32 @@ func FetchPeople(pattern string) ([]*Person, error) {
 	return people, nil
 }
 
+func FetchRoles(id int) ([]*Role, error) {
+	var roles []*Role
+
+	results, err := db.Query(
+		"SELECT r.FilmID, r.CharacterName, f.FullName, f.ProductionYear, getFilmRating(r.FilmID) FROM (SELECT FilmID, CharacterName From Role WHERE PersonID = ?) AS r LEFT JOIN Film AS f ON f.FilmID = r.FilmID ORDER BY f.ProductionYear DESC",
+		id)
+	if err != nil {
+		log.Println("Error fetching roles")
+		return nil, err
+	}
+
+	defer results.Close()
+	for results.Next() {
+		role := new(Role)
+
+		err = results.Scan(&role.FilmID, &role.Name, &role.FilmName, &role.Year, &role.FilmRating)
+		if err != nil {
+			log.Println("Error fetching roles")
+			return nil, err
+		}
+
+		roles = append(roles, role)
+	}
+	return roles, nil
+}
+
 func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 	person := new(Person)
 
@@ -59,51 +86,15 @@ func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 		return nil, nil, nil, err
 	}
 
-	var films []*Film
-
-	results, err := db.Query(
-		"SELECT FilmID, FullName, ProductionYear FROM Film WHERE PersonID = ? ORDER BY ProductionYear DESC",
-		id)
+	films, err := FetchFilmByDirector(id)
 	if err != nil {
-		log.Println("Error fetching films")
 		return nil, nil, nil, err
 	}
 
-	defer results.Close()
-	for results.Next() {
-		film := new(Film)
-
-		err = results.Scan(&film.ID, &film.Name, &film.Year)
-		if err != nil {
-			log.Println("Error fetching films")
-			return nil, nil, nil, err
-		}
-
-		films = append(films, film)
-	}
-
-	var roles []*Role
-
-	results, err = db.Query(
-		"SELECT r.FilmID, r.CharacterName, f.FullName, f.ProductionYear FROM (SELECT FilmID, CharacterName From Role WHERE PersonID = ?) AS r LEFT JOIN Film AS f ON f.FilmID = r.FilmID ORDER BY f.ProductionYear DESC",
-		id)
+	roles, err := FetchRoles(id)
 	if err != nil {
-		log.Println("Error fetching roles")
 		return nil, nil, nil, err
 	}
 
-	defer results.Close()
-	for results.Next() {
-		role := new(Role)
-
-		err = results.Scan(&role.FilmID, &role.Name, &role.FilmName, &role.Year)
-		if err != nil {
-			log.Println("Error fetching roles")
-			return nil, nil, nil, err
-		}
-
-		roles = append(roles, role)
-	}
-
-	return person, roles, nil, nil
+	return person, roles, films, nil
 }

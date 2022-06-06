@@ -25,6 +25,7 @@ func setUpRouter() *gin.Engine {
 	main := router.Group("/")
 	{
 		main.GET("/person/:id", getPerson)
+		main.GET("/film/:id", getFilm)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })
