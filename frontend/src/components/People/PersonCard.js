@@ -5,7 +5,7 @@ const PersonCard = (props) => {
     const name = props.person.Name;
     const altName = props.person.AltName;
     const date = props.person.Date;
-    const id = ":" + props.person.ID;
+    const id = "/person/" + props.person.ID;
 
     return (
         <div className="card mb-5 pb-2" style={{maxWidth: '18rem'}}>
