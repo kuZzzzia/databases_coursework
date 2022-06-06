@@ -1,7 +1,7 @@
 import {useState, useCallback, useEffect} from "react";
 
 import RolesList from "./RolesList";
-import FilmsList from "./FilmsList";
+import FilmsList from "../Films/FilmsList";
 import Errors from "../Errors/Errors";
 
 const Person = (props) => {
@@ -73,8 +73,14 @@ const Person = (props) => {
                     <p className="card-text">Дата рождения: {date}</p>
                 </div>
             </div>
-           {filmsContent}
-           {rolesContent}
+           <div>
+               <h5>Режиссерские работы</h5>
+               {filmsContent}
+           </div>
+           <div>
+               <h5>Актёрские работы</h5>
+               {rolesContent}
+           </div>
        </div>
         : Errors(errors);
 

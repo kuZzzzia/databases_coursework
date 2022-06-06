@@ -6,7 +6,7 @@ const FilmCard = (props) => {
     const altName = props.film.AltName;
     const year = props.film.Year;
     const duration = props.film.Duration;
-    const id = ":" + props.film.ID;
+    const id = "/film/" + props.film.ID;
 
     return (
         <div className="card mb-5 pb-2" style={{maxWidth: '18rem'}}>

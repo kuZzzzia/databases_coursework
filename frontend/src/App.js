@@ -8,6 +8,7 @@ import UserPage from "./pages/UserPage";
 import PersonSearchPage from "./pages/PersonSearchPage"
 import FilmSearchPage from "./pages/FilmSearchPage"
 import PersonPage from "./pages/PersonPage";
+import FilmPage from "./pages/FilmPage";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -27,6 +28,7 @@ function App() {
               }/>
               <Route path='/people' element={<PersonSearchPage />} />
               <Route path='/person/:id'  element={<PersonPage />} />
+              <Route path='/film/:id'  element={<FilmPage />} />
               <Route path='/films' element={<FilmSearchPage />} />
               <Route path='*' element={
                   <Navigate to="/"/>

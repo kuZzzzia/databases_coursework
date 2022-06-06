@@ -1,7 +1,7 @@
 import Person from '../components/People/Person';
 import {useParams} from "react-router-dom";
 
-const PersonPage = (props) => {
+const PersonPage = () => {
     let { id } = useParams();
     return <Person id = {id}/>;
 };

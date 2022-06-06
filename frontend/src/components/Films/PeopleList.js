@@ -1,8 +1,9 @@
 import {Link} from "react-router-dom";
 
-const RolesList = (props) => {
+const PeopleList = (props) => {
     return (
         <div>
+            <h5>Персонажи</h5>
             {props.roles.map((role) => (
                 <div className="row">
                     <div className="col-sm">
@@ -23,4 +24,4 @@ const RolesList = (props) => {
     );
 };
 
-export default RolesList;
+export default PeopleList;
