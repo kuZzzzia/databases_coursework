@@ -8,7 +8,7 @@ const Person = (props) => {
     const [errors, setErrors] = useState({});
     const [films, setFilms] = useState([]);
     const [roles, setRoles] = useState([]);
-    const [person, setPerson] = useState({});
+    const [person, setPerson] = useState({AltName: {String: "", Valid: false}, Date: {String: "", Valid: false}});
 
     const fetchPersonHandler = useCallback(async () => {
         setErrors({});
@@ -58,8 +58,8 @@ const Person = (props) => {
 
     const photo = '/' + person.Photo;
     const name = person.Name;
-    const altName = person.AltName;
-    const date = person.Date;
+    const altName = person.AltName.Valid ? person.AltName.String : '';
+    const date = person.Date.Valid ? 'Дата рождения: ' + person.Date.String : '';
 
     const Content = Object.keys(errors).length === 0 ?
        <div>
@@ -70,7 +70,7 @@ const Person = (props) => {
                 <div className="card-body">
                     <h5 className="card-title">{name}</h5>
                     <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
-                    <p className="card-text">Дата рождения: {date}</p>
+                    <p className="card-text">{date}</p>
                 </div>
             </div>
            <div>
