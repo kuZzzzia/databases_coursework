@@ -8,10 +8,15 @@ const Person = (props) => {
     const [errors, setErrors] = useState({});
     const [films, setFilms] = useState([]);
     const [roles, setRoles] = useState([]);
-    const [person, setPerson] = useState({AltName: {String: "", Valid: false}, Date: {String: "", Valid: false}});
+    const [person, setPerson] = useState({
+        AltName: {String: "", Valid: false},
+        Date: {String: "", Valid: false}
+    });
+    const [status, setStatus] = useState(false);
 
     const fetchPersonHandler = useCallback(async () => {
         setErrors({});
+        setStatus(false);
         try {
             const response = await fetch('/person/' + props.id);
             const data = await response.json();
@@ -29,6 +34,7 @@ const Person = (props) => {
                 setPerson(data.person);
                 setFilms(data.films);
                 setRoles(data.roles);
+                setStatus(true);
             }
         } catch (error) {
             setErrors({ "error": error.message });
@@ -62,26 +68,28 @@ const Person = (props) => {
     const date = person.Date.Valid ? 'Дата рождения: ' + person.Date.String : '';
 
     const Content = Object.keys(errors).length === 0 ?
-       <div>
-            <div className="row " >
-                <div className="col-lg-4">
-                    <img src={photo}  alt={name} style={{width : '100%' }}/>
-                </div>
-                <div className="card-body">
-                    <h5 className="card-title">{name}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
-                    <p className="card-text">{date}</p>
-                </div>
-            </div>
+       status ?
            <div>
-               <h5>Режиссерские работы</h5>
-               {filmsContent}
+                <div className="row " >
+                    <div className="col-lg-4">
+                        <img src={photo}  alt={name} style={{width : '100%' }}/>
+                    </div>
+                    <div className="card-body">
+                        <h5 className="card-title">{name}</h5>
+                        <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
+                        <p className="card-text">{date}</p>
+                    </div>
+                </div>
+               <div>
+                   <h5>Режиссерские работы</h5>
+                   {filmsContent}
+               </div>
+               <div>
+                   <h5>Актёрские работы</h5>
+                   {rolesContent}
+               </div>
            </div>
-           <div>
-               <h5>Актёрские работы</h5>
-               {rolesContent}
-           </div>
-       </div>
+           : <div>Processing...</div>
         : Errors(errors);
 
     return (
