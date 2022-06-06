@@ -1,12 +1,14 @@
 CREATE DATABASE IF NOT EXISTS Film_Rec_System;
 
 USE Film_Rec_System;
+# DROP DATABASE Film_Rec_System;
+
 
 CREATE TABLE Film_Rec_System.Person (
     `PersonID` int AUTO_INCREMENT PRIMARY KEY,
     `FullName` text NOT NULL,
     `AlternativeName` text NULL,
-    `Photo` text NULL,
+    `Photo` varchar(100) NOT NULL DEFAULT 'images/unknown.jpg',
     `DateOfBirth` date NULL
 );
 
@@ -14,7 +16,7 @@ CREATE TABLE Film_Rec_System.Film (
     `FilmID` int AUTO_INCREMENT PRIMARY KEY,
     `FullName` text NOT NULL,
     `AlternativeName` text NULL,
-    `Poster` text NULL,
+    `Poster` varchar(100) NOT NULL DEFAULT 'images/poster.png',
     `Description` text NULL,
     `Duration` int NULL,
     `ProductionYear` numeric(4) NULL CHECK (`ProductionYear` >= 1895),

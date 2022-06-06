@@ -1,5 +1,16 @@
 use Film_Rec_System;
 
-INSERT INTO Person(FullName, AlternativeName, Photo, DateOfBirth)
+INSERT INTO Person(FullName)
 VALUES
-    ('Хью Джекман', 'Hugh Jackman', '1', STR_TO_DATE('12-10-1968','%d-%m-%Y'))
+    ('Хью Джекман'),
+    ('Леонардо ДиКаприо'),
+    ('Роберт Дауни Младший'),
+    ('Мэтью Макконахи');
+
+INSERT INTO Film(FullName)
+VALUE ('Волк-с-Уолл-Стрит');
+
+INSERT INTO Role(FilmID, PersonID, CharacterName)
+VALUES (1, 2, 'Джордан Белфорт'),
+       (1, 4, 'Марк Ханна');
+
