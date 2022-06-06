@@ -84,8 +84,11 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, erro
 	film := new(Film)
 
 	err := db.QueryRow(
-		"SELECT f.FilmID, f.FullName, f.AlternativeName, f.Poster, f.`Description`, f.Duration, f.ProductionYear, p.FullName, p.PersonID FROM (SELECT * FROM Film WHERE FilmID = ?) AS f LEFT JOIN Person AS p on f.PersonID = p.PersonID",
-		id).Scan(&film.ID, &film.Name, &film.AltName, &film.Poster, &film.Description, &film.Duration, &film.Year, &film.Director, &film.DirectorID)
+		"SELECT * FROM Film_With_Director WHERE FilmID = ?",
+		id).
+		Scan(&film.ID, &film.Name, &film.AltName,
+			&film.Poster, &film.Description, &film.Duration,
+			&film.Year, &film.DirectorID, &film.Director)
 	if err != nil {
 		log.Println("Error fetching person")
 		return nil, nil, nil, nil, err
@@ -107,7 +110,7 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, erro
 	var cast []*CastItem
 
 	results, err := db.Query(
-		"SELECT r.PersonID, p.FullName, r.CharacterName FROM (SELECT PersonID, CharacterName FROM Role WHERE FilmID = ?) AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID",
+		"SELECT PersonID, FullName, CharacterName FROM Film_Cast WHERE FilmID = ?",
 		id)
 	if err != nil {
 		log.Println("Error fetching films")

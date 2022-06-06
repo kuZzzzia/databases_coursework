@@ -53,7 +53,7 @@ func FetchRoles(id int) ([]*Role, error) {
 	var roles []*Role
 
 	results, err := db.Query(
-		"SELECT r.FilmID, r.CharacterName, f.FullName, f.ProductionYear, getFilmRating(r.FilmID) FROM (SELECT FilmID, CharacterName From Role WHERE PersonID = ?) AS r LEFT JOIN Film AS f ON f.FilmID = r.FilmID ORDER BY f.ProductionYear DESC",
+		"SELECT FilmID, CharacterName, FullName, ProductionYear, getFilmRating(FilmID) From Film_Cast WHERE PersonID = ? ORDER BY ProductionYear DESC",
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
