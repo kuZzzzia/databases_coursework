@@ -1,18 +1,25 @@
 import {useState, useCallback, useEffect} from "react";
 
 import Errors from "../Errors/Errors";
-import FilmsList from "./FilmsList";
 import PeopleList from "./PeopleList";
 import PlaylistsList from "../Playlists/PlaylistsList"
 import DiscussionList from "../Discussion/DiscussionList"
+import {Link} from "react-router-dom";
 
 const Film = (props) => {
     const [errors, setErrors] = useState({});
-    const [film, setFilm] = useState({});
+    const [film, setFilm] = useState({
+        AltName: {String: "", Valid: false},
+        Description: {String: "", Valid: false},
+        Director: {String: "", Valid: false},
+        Year: {Int16: 0, Valid: false},
+        Duration: {Int16: 0, Valid: false},
+        DirectorID: {Int16: 0, Valid: false},
+    });
     const [people, setPeople] = useState([]);
-    const [alikeFilms, setAlikeFilms] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [discussion, setDiscussion] = useState([]);
+    const [status, setStatus] = useState(false);
 
     const fetchFilmHandler = useCallback(async () => {
         setErrors({});
@@ -32,9 +39,9 @@ const Film = (props) => {
             } else {
                 setFilm(data.film);
                 setPeople(data.people);
-                setAlikeFilms(data.alikeFilms);
                 setPlaylists(data.playlists);
                 setDiscussion(data.discussion);
+                setStatus(true);
             }
         } catch (error) {
             setErrors({ "error": error.message });
@@ -46,63 +53,69 @@ const Film = (props) => {
     }, [fetchFilmHandler]);
 
 
-    const peopleContent =
-        people.length === 0 ?
-            <p>Еще нет назначенных на роли актеров</p>
-            :
-            <PeopleList
-                people={people}
-            />;
-
-    const alikeFilmsContent =
-        alikeFilms.length === 0 ?
-            <p>Нет похожих фильмов</p>
-            :
-            <FilmsList
-                films={alikeFilms}
-            />;
-
-    const playlistsContent =
-        playlists.length === 0 ?
-            <p>Нет подборок с данным фильмом</p>
-            :
-            <PlaylistsList
-                playlists={playlists}
-            />;
-
-    const discussionContent =
-        discussion.length === 0 ?
-            <p></p>
-            :
-            <DiscussionList
-                discussion={discussion}
-            />;
+    // const peopleContent =
+    //     people.length === 0 ?
+    //         <p>Еще нет назначенных на роли актеров</p>
+    //         :
+    //         <PeopleList
+    //             people={people}
+    //         />;
+    //
+    // const playlistsContent =
+    //     playlists.length === 0 ?
+    //         <p>Нет подборок с данным фильмом</p>
+    //         :
+    //         <PlaylistsList
+    //             playlists={playlists}
+    //         />;
+    //
+    // const discussionContent =
+    //     discussion.length === 0 ?
+    //         <p></p>
+    //         :
+    //         <DiscussionList
+    //             discussion={discussion}
+    //         />;
 
 
     const poster = '/' + film.Poster;
     const name = film.Name;
-    const altName = film.AltName;
-    const year = film.Year;
+    const altName = film.AltName.Valid ? film.AltName.String : '';
+    const description = film.Description.Valid ? film.Description.String : '';
+    const director = film.Director.Valid ? 'Режиссер' + film.Director.String : '';
+    const duration = film.Duration.Valid ? 'Продолжительность: ' + film.Duration.Int16 + ' минут' : '';
+    const year = film.Year.Valid ? 'Год производства: ' + film.Year.Int16 : '';
+    const directorContent = film.DirectorID.Valid ?
+        <div className="row">
+            <p className="card-text">{director}</p>
+            <Link className="card-link-link" to={'/person/' + film.DirectorID.Int16}>View more</Link>
+        </div>
+        : <div></div>;
+
 
     const Content = Object.keys(errors).length === 0 ?
-        <div>
-            <div className="row " >
-                <div className="col-lg-4">
-                    <img src={poster}  alt={name} style={{width : '100%' }}/>
+        status ?
+            <div>
+                <div className="row " >
+                    <div className="col-lg-4">
+                        <img src={poster}  alt={name} style={{width : '100%' }}/>
+                    </div>
+                    <div className="card-body">
+                        <h5 className="card-title">{name}</h5>
+                        <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
+                        <p className="card-text">{year}</p>
+                        <p className="card-text">{duration}</p>
+                        <p className="card-text">{description}</p>
+                        {directorContent}
+                    </div>
                 </div>
-                <div className="card-body">
-                    <h5 className="card-title">{name}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
-                    <p className="card-text">Год производства: {year}</p>
+                <div className="row " >
+                    {playlistsContent}
                 </div>
+                {peopleContent}
+                {discussionContent}
             </div>
-            <div className="row " >
-                {alikeFilmsContent}
-                {playlistsContent}
-            </div>
-            {peopleContent}
-            {discussionContent}
-        </div>
+            : <div>Processing...</div>
         : Errors(errors);
 
     return (

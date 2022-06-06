@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 const FilmCard = (props) => {
     const poster = props.film.Poster;
     const name = props.film.Name;
-    const altName = props.person.AltName.Valid ? props.person.AltName.String : '';
-    const year = props.person.Year.Valid ? 'Год выпуска: ' + props.person.Year.Int16 : '';
-    const duration = props.person.Duration.Valid ? 'Продолжительность: ' + props.person.Duration.Int16 + ' минут': '';
+    const altName = props.film.AltName.Valid ? props.film.AltName.String : '';
+    const year = props.film.Year.Valid ? 'Год выпуска: ' + props.film.Year.Int16 : '';
+    const duration = props.film.Duration.Valid ? 'Продолжительность: ' + props.film.Duration.Int16 + ' минут': '';
     const id = "/film/" + props.film.ID;
 
     return (

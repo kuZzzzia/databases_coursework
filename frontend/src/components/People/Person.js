@@ -8,7 +8,10 @@ const Person = (props) => {
     const [errors, setErrors] = useState({});
     const [films, setFilms] = useState([]);
     const [roles, setRoles] = useState([]);
-    const [person, setPerson] = useState({AltName: {String: "", Valid: false}, Date: {String: "", Valid: false}});
+    const [person, setPerson] = useState({
+        AltName: {String: "", Valid: false},
+        Date: {String: "", Valid: false}
+    });
     const [status, setStatus] = useState(false);
 
     const fetchPersonHandler = useCallback(async () => {

@@ -5,7 +5,6 @@ const PersonCard = (props) => {
     const name = props.person.Name;
     const altName = props.person.AltName.Valid ? props.person.AltName.String : '';
     const date = props.person.Date.Valid ? 'Дата рождения: ' + props.person.Date.String : '';
-    console.log(props);
     const id = "/person/" + props.person.ID;
 
     return (
