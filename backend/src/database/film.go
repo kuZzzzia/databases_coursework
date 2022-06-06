@@ -94,36 +94,34 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, erro
 		return nil, nil, nil, nil, err
 	}
 	err = db.QueryRow(
-		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = TRUE").Scan(&film.LikeAmount)
+		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = TRUE", id).Scan(&film.LikeAmount)
 	if err != nil {
-		log.Println("Error fetching person")
+		log.Println("Error fetching person" + err.Error())
 		return nil, nil, nil, nil, err
 	}
 
 	err = db.QueryRow(
-		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = FALSE").Scan(&film.DislikeAmount)
+		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = FALSE", id).Scan(&film.DislikeAmount)
 	if err != nil {
 		log.Println("Error fetching person")
 		return nil, nil, nil, nil, err
 	}
 
 	var cast []*CastItem
-
 	results, err := db.Query(
 		"SELECT PersonID, FullName, CharacterName FROM Film_Cast WHERE FilmID = ?",
 		id)
 	if err != nil {
-		log.Println("Error fetching films")
+		log.Println("Error fetching films" + err.Error())
 		return nil, nil, nil, nil, err
 	}
-
 	defer results.Close()
 	for results.Next() {
 		castItem := new(CastItem)
 
-		err = results.Scan(&castItem.ID, castItem.Name, castItem.Character)
+		err = results.Scan(&castItem.ID, &castItem.Name, &castItem.Character)
 		if err != nil {
-			log.Println("Error fetching films")
+			log.Println("Error fetching films" + err.Error())
 			return nil, nil, nil, nil, err
 		}
 
