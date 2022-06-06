@@ -1,4 +1,4 @@
-const FilmList = (props) => {
+const FilmsList = (props) => {
     return (
         <div>
             {props.films.map((film) => (
@@ -12,4 +12,4 @@ const FilmList = (props) => {
     );
 };
 
-export default RolesList;
+export default FilmsList;
