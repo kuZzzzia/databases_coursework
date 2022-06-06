@@ -17,7 +17,9 @@ CREATE TABLE Film_Rec_System.Film (
     `Poster` text NULL,
     `Description` text NULL,
     `Duration` int NULL,
-    `ProductionYear` numeric(4) NULL CHECK (`ProductionYear` >= 1895)
+    `ProductionYear` numeric(4) NULL CHECK (`ProductionYear` >= 1895),
+    `PersonID` int,
+    FOREIGN KEY (`PersonID`) REFERENCES Film_Rec_System.Person(`PersonID`)
 );
 
 CREATE TABLE Film_Rec_System.Role (
