@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 const PersonCard = (props) => {
     const photo = props.person.Photo;
     const name = props.person.Name;
-    const altName = props.person.AltName;
-    const date = props.person.Date;
+    const altName = props.person.AltName.Valid ? props.person.AltName.String : '';
+    const date = props.person.Date.Valid ? 'Дата рождения: ' + props.person.Date.String : '';
+    console.log(props);
     const id = "/person/" + props.person.ID;
 
     return (
@@ -13,7 +14,7 @@ const PersonCard = (props) => {
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
-                <p className="card-text">Дата рождения: {date}</p>
+                <p className="card-text">{date}</p>
                 <Link className="card-link-link" to={id}>View more</Link>
             </div>
         </div>
