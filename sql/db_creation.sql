@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS Film_Rec_System;
 
 USE Film_Rec_System;
-# DROP DATABASE Film_Rec_System;
+DROP DATABASE Film_Rec_System;
 
 
 CREATE TABLE Film_Rec_System.Person (
@@ -123,6 +123,15 @@ CREATE TABLE Film_Rec_System.PlaylistScore (
         ON DELETE CASCADE
 );
 
+CREATE VIEW Film_With_Director AS
+    SELECT f.FilmID, f.FullName, f.AlternativeName, f.Poster, f.`Description`, f.Duration, f.ProductionYear, f.PersonID, p.FullName AS PersonName FROM Film AS f LEFT JOIN Person AS p on f.PersonID = p.PersonID;
+
+CREATE VIEW Film_Cast AS
+    SELECT f.FilmID, r.CharacterName, r.PersonID, p.FullName FROM Role AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID LEFT JOIN Film AS f on r.FilmID = f.FilmID;
+
+CREATE VIEW Film_Discussion_With_Users AS
+    SELECT f.FilmID, d.Review, d.Date, d.UserID, u.Username FROM Discussion AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
+
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 CREATE FUNCTION getFilmRating(id int)
@@ -131,14 +140,31 @@ CREATE FUNCTION getFilmRating(id int)
         DECLARE likeAmount float;
         DECLARE total float;
         DECLARE ret int DEFAULT -1;
-        CREATE TEMPORARY TABLE TempTable(Rate BOOL);
-        INSERT INTO TempTable SELECT FilmScore FROM View WHERE FilmID = id;
-        SELECT Count(*) INTO likeAmount FROM TempTable WHERE Rate = TRUE;
-        SELECT Count(*) INTO total FROM TempTable;
-        DROP TEMPORARY TABLE TempTable;
+        CREATE TEMPORARY TABLE TempTableForFilmRating(Rate BOOL);
+        INSERT INTO TempTableForFilmRating SELECT FilmScore FROM View WHERE FilmID = id;
+        SELECT Count(*) INTO likeAmount FROM TempTableForFilmRating WHERE Rate = TRUE;
+        SELECT Count(*) INTO total FROM TempTableForFilmRating;
+        DROP TEMPORARY TABLE TempTableForFilmRating;
         IF total > 0 THEN
             SET ret = likeAmount / total * 100;
         END IF;
         RETURN ret;
     END;
+
+CREATE FUNCTION getPlaylistRating(id int)
+    RETURNS int
+BEGIN
+    DECLARE likeAmount float;
+    DECLARE total float;
+    DECLARE ret int DEFAULT -1;
+    CREATE TEMPORARY TABLE TempTableForPlaylistRating(Rate BOOL);
+    INSERT INTO TempTableForPlaylistRating SELECT Score FROM PlaylistScore WHERE PlaylistID = id;
+    SELECT Count(*) INTO likeAmount FROM TempTableForPlaylistRating WHERE Rate = TRUE;
+    SELECT Count(*) INTO total FROM TempTableForPlaylistRating;
+    DROP TEMPORARY TABLE TempTableForPlaylistRating;
+    IF total > 0 THEN
+        SET ret = likeAmount / total * 100;
+    END IF;
+    RETURN ret;
+END;
 
