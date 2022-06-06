@@ -9,9 +9,13 @@ const RolesList = (props) => {
                         Фильм: {role.FilmName}
                     </div>
                     {role.Year.Valid ?
-                    <div className="col-sm">
-                        Год производства: {role.Year.Int16}
-                    </div> : <div></div>}
+                        <div className="col-sm">
+                            Год производства: {role.Year.Int16}
+                        </div> : <div></div>}
+                    {role.FilmRating > 0 ?
+                        <div className="col-2">
+                            Рейтинг: {role.FilmRating}%
+                        </div> : <div>Нет оценки</div>}
                     {role.Name.Valid ?
                     <div className="col-sm">
                         Имя персонажа: {role.Name.String}

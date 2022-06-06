@@ -6,13 +6,18 @@ const FilmsList = (props) => {
             {props.films.map((film) => (
                 <div className="row">
                     <div className="col-sm">
-                        {film.Name}
+                        Фильм: {film.FilmName}
                     </div>
+                    {film.Year.Valid ?
+                        <div className="col-sm">
+                            Год производства: {film.Year.Int16}
+                        </div> : <div></div>}
+                    {film.FilmRating > 0 ?
+                        <div className="col-2">
+                            Рейтинг: {film.FilmRating}%
+                        </div> : <div>Нет оценки</div>}
                     <div className="col-sm">
-                        Год производства: {film.Year}
-                    </div>
-                    <div className="col-sm">
-                        <Link className="card-link-link" to={'/person/'+film.ID}>View more</Link>
+                        <Link className="card-link-link" to={'/film/'+film.FilmID}>View more</Link>
                     </div>
                 </div>
             ))}
