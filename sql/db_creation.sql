@@ -123,3 +123,22 @@ CREATE TABLE Film_Rec_System.PlaylistScore (
         ON DELETE CASCADE
 );
 
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+CREATE FUNCTION getFilmRating(id int)
+    RETURNS int
+    BEGIN
+        DECLARE likeAmount float;
+        DECLARE total float;
+        DECLARE ret int DEFAULT -1;
+        CREATE TEMPORARY TABLE TempTable(Rate BOOL);
+        INSERT INTO TempTable SELECT FilmScore FROM View WHERE FilmID = id;
+        SELECT Count(*) INTO likeAmount FROM TempTable WHERE Rate = TRUE;
+        SELECT Count(*) INTO total FROM TempTable;
+        DROP TEMPORARY TABLE TempTable;
+        IF total > 0 THEN
+            SET ret = likeAmount / total * 100;
+        END IF;
+        RETURN ret;
+    END;
+
