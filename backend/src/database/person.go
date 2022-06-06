@@ -1,20 +1,23 @@
 package database
 
-import "log"
+import (
+	"database/sql"
+	"log"
+)
 
 type Person struct {
 	ID      int
 	Name    string
-	AltName string
+	AltName sql.NullString
 	Photo   string
-	Date    string
+	Date    sql.NullString
 }
 
 type Role struct {
 	FilmID   int
-	Name     string
+	Name     sql.NullString
 	FilmName string
-	Year     int
+	Year     sql.NullInt16
 }
 
 func FetchPeople(pattern string) ([]*Person, error) {
