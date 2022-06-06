@@ -1,15 +1,19 @@
 package database
 
-import "log"
+import (
+	"database/sql"
+	"log"
+)
 
 type Film struct {
 	ID          int
 	Name        string
-	AltName     string
+	AltName     sql.NullString
 	Poster      string
-	Duration    int
-	Description string
-	Year        int
+	Duration    sql.NullInt16
+	Description sql.NullString
+	Year        sql.NullInt16
+	DirectorID  sql.NullInt16
 }
 
 func FetchFilms(pattern string) ([]*Film, error) {

@@ -1,20 +1,23 @@
 package database
 
-import "log"
+import (
+	"database/sql"
+	"log"
+)
 
 type Person struct {
 	ID      int
 	Name    string
-	AltName string
+	AltName sql.NullString
 	Photo   string
-	Date    string
+	Date    sql.NullString
 }
 
 type Role struct {
 	FilmID   int
-	Name     string
+	Name     sql.NullString
 	FilmName string
-	Year     int
+	Year     sql.NullInt16
 }
 
 func FetchPeople(pattern string) ([]*Person, error) {
@@ -56,32 +59,32 @@ func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 		return nil, nil, nil, err
 	}
 
-	//var films []*Film
-	//
-	//results, err := db.Query(
-	//	"SELECT FilmID, FullName, ProductionYear FROM Film WHERE PersonID = ?",
-	//	id)
-	//if err != nil {
-	//	log.Println("Error fetching films")
-	//	return nil, nil, nil, err
-	//}
+	var films []*Film
 
-	//defer results.Close()
-	//for results.Next() {
-	//	film := new(Film)
-	//
-	//	err = results.Scan(&film.ID, &film.Name, &film.Year)
-	//	if err != nil {
-	//		log.Println("Error fetching films")
-	//		return nil, nil, nil, err
-	//	}
-	//
-	//	films = append(films, film)
-	//}
+	results, err := db.Query(
+		"SELECT FilmID, FullName, ProductionYear FROM Film WHERE PersonID = ? ORDER BY ProductionYear DESC",
+		id)
+	if err != nil {
+		log.Println("Error fetching films")
+		return nil, nil, nil, err
+	}
+
+	defer results.Close()
+	for results.Next() {
+		film := new(Film)
+
+		err = results.Scan(&film.ID, &film.Name, &film.Year)
+		if err != nil {
+			log.Println("Error fetching films")
+			return nil, nil, nil, err
+		}
+
+		films = append(films, film)
+	}
 
 	var roles []*Role
 
-	results, err := db.Query(
+	results, err = db.Query(
 		"SELECT r.FilmID, r.CharacterName, f.FullName, f.ProductionYear FROM (SELECT FilmID, CharacterName From Role WHERE PersonID = ?) AS r LEFT JOIN Film AS f ON f.FilmID = r.FilmID ORDER BY f.ProductionYear DESC",
 		id)
 	if err != nil {
