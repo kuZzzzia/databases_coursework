@@ -129,8 +129,9 @@ CREATE VIEW Film_With_Director AS
 CREATE VIEW Film_Cast AS
     SELECT f.FilmID, r.CharacterName, r.PersonID, p.FullName FROM Role AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID LEFT JOIN Film AS f on r.FilmID = f.FilmID;
 
+
 CREATE VIEW Film_Discussion_With_Users AS
-    SELECT f.FilmID, d.Review, d.Date, d.UserID, u.Username FROM Discussion AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
+    SELECT f.FilmID, d.DiscussionID, d.Review, d.Date, d.UserID, u.Username FROM Discussion AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
 
 SET GLOBAL log_bin_trust_function_creators = 1;
 
