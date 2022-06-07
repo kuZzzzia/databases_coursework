@@ -12,7 +12,7 @@ const RolesList = (props) => {
                         <div className="col-sm">
                             Год производства: {role.Year.Int16}
                         </div> : <div></div>}
-                    {role.FilmRating > 0 ?
+                    {role.FilmRating !== -1 ?
                         <div className="col-2">
                             Рейтинг: {role.FilmRating}%
                         </div> : <div>Нет оценки</div>}

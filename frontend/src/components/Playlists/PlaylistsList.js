@@ -2,18 +2,18 @@ import {Link} from "react-router-dom";
 
 const PlaylistsList = (props) => {
     return (
-        <div>
+        <div className="col">
             <h5>Подборки</h5>
             {props.playlists.map((playlist) => (
                 <div className="row">
                     <div className="col-sm">
-                        {playlist.Name}
+                        {playlist.Title}
                     </div>
                     <div className="col-sm">
-                        Год производства: {playlist.Year}
+                        {playlist.Rating === -1 ? 'Рейтинг: ' + playlist.Rating : 'Нет оценки'}
                     </div>
                     <div className="col-sm">
-                        <Link className="card-link-link" to={'/person/'+playlist.ID}>View more</Link>
+                        <Link className="card-link-link" to={'/playlist/'+playlist.ID}>View more</Link>
                     </div>
                 </div>
             ))}

@@ -2,22 +2,20 @@ import {Link} from "react-router-dom";
 
 const PeopleList = (props) => {
     return (
-        <div>
+        <div className="col">
             <h5>Персонажи</h5>
-            {props.roles.map((role) => (
+            {props.people.map((person) => (
                 <div className="row">
                     <div className="col-sm">
-                        Имя персонажа: {role.Name}
+                        {person.Name}
                     </div>
-                    <div className="col-sm">
-                        Фильм: {role.FilmName}
+                    <div className="col-md-auto">
+                        <Link className="card-link-link" to={'/person/'+person.ID}>View more</Link>
                     </div>
-                    <div className="col-sm">
-                        Год производства: {role.Year}
-                    </div>
-                    <div className="col-sm">
-                        <Link className="card-link-link" to={'/film/'+role.FilmID}>View more</Link>
-                    </div>
+                    {person.Character.Valid ?
+                        <div className="col-sm">
+                            Имя персонажа: {person.Character.String}
+                        </div> : <div></div>}
                 </div>
             ))}
         </div>

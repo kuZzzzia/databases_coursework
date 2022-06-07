@@ -38,7 +38,7 @@ const Film = (props) => {
                 }
             } else {
                 setFilm(data.film);
-                setPeople(data.people);
+                setPeople(data.cast);
                 setPlaylists(data.playlists);
                 setDiscussion(data.discussion);
                 setStatus(true);
@@ -53,21 +53,21 @@ const Film = (props) => {
     }, [fetchFilmHandler]);
 
 
-    // const peopleContent =
-    //     people.length === 0 ?
-    //         <p>Еще нет назначенных на роли актеров</p>
-    //         :
-    //         <PeopleList
-    //             people={people}
-    //         />;
-    //
-    // const playlistsContent =
-    //     playlists.length === 0 ?
-    //         <p>Нет подборок с данным фильмом</p>
-    //         :
-    //         <PlaylistsList
-    //             playlists={playlists}
-    //         />;
+    const peopleContent =
+        people.length === 0 ?
+            <p className="col">Еще нет назначенных на роли актеров</p>
+            :
+            <PeopleList
+                people={people}
+            />;
+
+    const playlistsContent =
+        playlists.length === 0 ?
+            <p className="col">Нет подборок с данным фильмом</p>
+            :
+            <PlaylistsList
+                playlists={playlists}
+            />;
     //
     // const discussionContent =
     //     discussion.length === 0 ?
@@ -109,11 +109,11 @@ const Film = (props) => {
                         {directorContent}
                     </div>
                 </div>
-                <div className="row " >
+                <div className="row" >
                     {playlistsContent}
+                    {peopleContent}
                 </div>
-                {peopleContent}
-                {discussionContent}
+                {/*{discussionContent}*/}
             </div>
             : <div>Processing...</div>
         : Errors(errors);
