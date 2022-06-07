@@ -27,6 +27,7 @@ func setUpRouter() *gin.Engine {
 	{
 		auth.POST("/film/:id", createMessage)
 		auth.POST("/film/rate/:id", rateFilm)
+		auth.POST("/film/rateStatus/:id", getFilmRate)
 	}
 
 	main := router.Group("/")
