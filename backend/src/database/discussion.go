@@ -7,7 +7,6 @@ import (
 
 type Message struct {
 	ID       int
-	Date     string
 	Review   string
 	UserID   sql.NullInt16
 	UserName sql.NullString
@@ -18,7 +17,7 @@ func FetchDiscussionsForFilm(id int) ([]*Message, error) {
 	var discussion []*Message
 
 	results, err := db.Query(
-		"SELECT DiscussionID, `Date`, Review, UserID, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY `Date`",
+		"SELECT DiscussionID, Review, UserID, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY DiscussionID DESC",
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
@@ -29,7 +28,7 @@ func FetchDiscussionsForFilm(id int) ([]*Message, error) {
 	for results.Next() {
 		discussionItem := new(Message)
 
-		err = results.Scan(&discussionItem.ID, &discussionItem.Date, &discussionItem.Review, &discussionItem.UserID, &discussionItem.UserName)
+		err = results.Scan(&discussionItem.ID, &discussionItem.Review, &discussionItem.UserID, &discussionItem.UserName)
 		if err != nil {
 			log.Println("Error fetching roles")
 			return nil, err
