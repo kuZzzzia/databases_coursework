@@ -27,14 +27,16 @@ func setUpRouter() *gin.Engine {
 	{
 		auth.POST("/film/:id", createMessage)
 		auth.POST("/film/rate/:id", rateFilm)
+		auth.POST("/playlist/rate/:id", ratePlaylist)
 		auth.POST("/film/rateStatus/:id", getFilmRate)
+		auth.POST("/playlist/rateStatus/:id", getPlaylistRate)
 	}
 
 	main := router.Group("/")
 	{
 		main.GET("/person/:id", getPerson)
 		main.GET("/film/:id", getFilm)
-		//main.GET("/playlist/:id", getPlaylist)
+		main.GET("/playlist/:id", getPlaylist)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })

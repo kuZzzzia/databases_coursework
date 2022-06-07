@@ -12,6 +12,7 @@ type Playlist struct {
 	Rating        int
 	LikeAmount    int
 	DislikeAmount int
+	UserName      sql.NullString
 	Films         []*Film
 }
 
@@ -40,4 +41,32 @@ func FetchPlaylistsForFilm(id int) ([]*Playlist, error) {
 	}
 
 	return playlists, nil
+}
+
+func FetchPlaylist(id int) (*Playlist, error) {
+	playlist := new(Playlist)
+
+	err := db.QueryRow(
+		"SELECT PlaylistID, PlaylistTitle, `Description` FROM Playlist WHERE PlaylistID = ?",
+		id).
+		Scan(&playlist.ID, &playlist.Title, &playlist.Description)
+	if err != nil {
+		log.Println("Error fetching person")
+		return nil, err
+	}
+	err = db.QueryRow(
+		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE", id).Scan(&playlist.LikeAmount)
+	if err != nil {
+		log.Println("Error fetching person" + err.Error())
+		return nil, err
+	}
+
+	err = db.QueryRow(
+		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE", id).Scan(&playlist.DislikeAmount)
+	if err != nil {
+		log.Println("Error fetching person")
+		return nil, err
+	}
+
+	return playlist, nil
 }
