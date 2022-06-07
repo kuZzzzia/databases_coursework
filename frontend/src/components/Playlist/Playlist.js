@@ -12,7 +12,6 @@ const Playlist = (props) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState({});
     const [userName, setUserName] = useState({});
-    const [userID, setUserID] = useState({});
     const [films, setFilms] = useState([]);
     const [likeAmount, setLikeAmount] = useState(0);
     const [dislikeAmount, setDislikeAmount] = useState(0);
@@ -35,13 +34,12 @@ const Playlist = (props) => {
                     setErrors(data['error']);
                 }
             } else {
-                setTitle(data.Title);
-                setDescription(data.Description);
-                setUserName(data.UserName);
-                setUserID(data.UserID);
-                setFilms(data.Films);
-                setLikeAmount(data.LikeAmount);
-                setDislikeAmount(data.DislikeAmount);
+                setTitle(data.title);
+                setDescription(data.description);
+                setUserName(data.userName);
+                setFilms(data.films);
+                setLikeAmount(data.likeAmount);
+                setDislikeAmount(data.dislikeAmount);
                 if (authContext.loggedIn) {
                     try {
                         const response = await fetch('/auth/playlist/rateStatus/' + props.id,
@@ -81,7 +79,7 @@ const Playlist = (props) => {
             />;
 
     const descriptionContent = description.Valid ? description.String : '';
-    const user = userID.Valid ? userName.String : 'Пользователь удалён';
+    const user = userName.Valid ? userName.String : 'Пользователь удалён';
 
 
     const Content = Object.keys(errors).length === 0 ?
