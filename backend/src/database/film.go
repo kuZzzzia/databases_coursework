@@ -128,10 +128,15 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 		cast = append(cast, castItem)
 	}
 
+	playlists, err := FetchPlaylistsForFilm(id)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
 	discussion, err := FetchDiscussionsForFilm(id)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
 
-	return film, cast, nil, discussion, nil
+	return film, cast, playlists, discussion, nil
 }

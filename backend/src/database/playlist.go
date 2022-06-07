@@ -18,9 +18,8 @@ type Playlist struct {
 func FetchPlaylistsForFilm(id int) ([]*Playlist, error) {
 	var playlists []*Playlist
 
-	//TODO: write the select query
 	results, err := db.Query(
-		"",
+		"SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM (SELECT PlaylistID AS id_int FROM Playlist_Film_INT WHERE FilmID = ?) as i LEFT JOIN Playlist AS p ON id_int = p.PlaylistID ORDER BY rate DESC",
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
