@@ -30,6 +30,7 @@ function App() {
               <Route path='/person/:id'  element={<PersonPage />} />
               <Route path='/film/:id'  element={<FilmPage />} />
               <Route path='/films' element={<FilmSearchPage />} />
+              <Route path='/user/:id' element={<HomePage />}></Route>
               <Route path='*' element={
                   <Navigate to="/"/>
               }/>
