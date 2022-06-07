@@ -9,6 +9,7 @@ import PersonSearchPage from "./pages/PersonSearchPage"
 import FilmSearchPage from "./pages/FilmSearchPage"
 import PersonPage from "./pages/PersonPage";
 import FilmPage from "./pages/FilmPage";
+import PlaylistPage from "./pages/PlaylistPage";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -18,22 +19,21 @@ function App() {
           <Routes>
               <Route path='/' element={<HomePage />} />
               {!authContext.loggedIn && (
-                  <Route path='/auth' element={
-                      <AuthPage />
-                  }/>
+                  <Route path='/auth' element={<AuthPage />}/>
               )}
               <Route path='/profile' element={
                   authContext.loggedIn ?
                       <UserPage /> : <Navigate to="/auth" />
               }/>
+              {/*{authContext.loggedIn && (*/}
+              {/*    <Route path='/profile/playlist' element={<PlaylistCreatingPage />}/>*/}
+              {/*)}*/}
+              <Route path='/playlist/:id' element={<PlaylistPage />} />
               <Route path='/people' element={<PersonSearchPage />} />
               <Route path='/person/:id'  element={<PersonPage />} />
               <Route path='/film/:id'  element={<FilmPage />} />
               <Route path='/films' element={<FilmSearchPage />} />
-              <Route path='/user/:id' element={<HomePage />}></Route>
-              <Route path='*' element={
-                  <Navigate to="/"/>
-              }/>
+              <Route path='*' element={<Navigate to="/"/>}/>
           </Routes>
       </Layout>
   );

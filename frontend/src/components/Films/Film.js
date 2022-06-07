@@ -2,7 +2,7 @@ import {useState, useCallback, useEffect, useContext} from "react";
 
 import Errors from "../Errors/Errors";
 import PeopleList from "./PeopleList";
-import PlaylistsList from "../Playlists/PlaylistsList"
+import PlaylistsList from "../Playlist/PlaylistsList"
 import Discussion from "../Discussion/Discussion"
 import {Link} from "react-router-dom";
 import Rate from "../Rate/Rate";

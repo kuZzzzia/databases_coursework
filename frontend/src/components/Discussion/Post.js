@@ -1,8 +1,6 @@
-import {Link} from "react-router-dom";
-
 const Post = (props) => {
     const user = props.post.UserName.Valid
-        ? <Link to={'/user/' + props.post.UserID.Int16}>{props.post.UserName.String}</Link>
+        ? props.post.UserName.String
         : 'User deleted'
 
     return (
