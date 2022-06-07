@@ -69,18 +69,14 @@ const PostForm = (props) => {
     const submitButtonText = 'Add Post';
 
     return (
-        <section>
-            <div className="container w-75 pb-4">
-                <form onSubmit={submitHandler}>
-                    <div className="form-group pb-3">
-                        <label htmlFor="content">Message</label>
-                        <textarea id="content" className="form-control" rows="5" required value={contentValue} onChange={contentChangeHandler}></textarea>
-                    </div>
+
+            <div className="container w-75">
+                <form className="form-inline" onSubmit={submitHandler}>
+                    <input id="content" className="form-control flex-fill mr-2" required value={contentValue} placeholder="Message" onChange={contentChangeHandler}></input>
                     <button type="submit" className="btn btn-success">{submitButtonText}</button>
                 </form>
                 {errorContent}
             </div>
-        </section>
     );
 }
 

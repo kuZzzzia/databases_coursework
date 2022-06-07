@@ -6,7 +6,7 @@ const Discussion = (props) => {
     const [posts, setPosts] = useState(props.discussion);
 
     const addPostHandler = (postData) => {
-        setPosts((prevState) => { return [...prevState, postData] });
+        setPosts((prevState) => { return [postData, ...prevState] });
     }
 
 

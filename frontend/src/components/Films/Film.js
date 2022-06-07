@@ -5,6 +5,7 @@ import PeopleList from "./PeopleList";
 import PlaylistsList from "../Playlists/PlaylistsList"
 import Discussion from "../Discussion/Discussion"
 import {Link} from "react-router-dom";
+import Rate from "../Rate/Rate";
 
 const Film = (props) => {
     const [errors, setErrors] = useState({});
@@ -100,6 +101,13 @@ const Film = (props) => {
                         {directorContent}
                     </div>
                 </div>
+                <Rate
+                    Like={film.LikeAmount}
+                    Dislike={film.DislikeAmount}
+                    Status={0}
+                    Addr={'film'}
+                    ID={film.ID}
+                />
                 <div className="row" >
                     {playlistsContent}
                     {peopleContent}
