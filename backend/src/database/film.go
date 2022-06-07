@@ -80,7 +80,7 @@ func FetchFilmByDirector(id int) ([]*Film, error) {
 	return films, nil
 }
 
-func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, error) {
+func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 	film := new(Film)
 
 	err := db.QueryRow(

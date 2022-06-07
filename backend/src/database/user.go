@@ -38,8 +38,6 @@ func AddUser(user *User) error {
 	user.Salt = salt
 	user.HashedPassword = hashedPassword
 
-	db := GetDBConnection()
-
 	insert, err := db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
 		user.Username, user.HashedPassword, user.Salt)
 	defer insert.Close()

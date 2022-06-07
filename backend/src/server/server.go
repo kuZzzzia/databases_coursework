@@ -22,6 +22,12 @@ func setUpRouter() *gin.Engine {
 
 	}
 
+	auth := router.Group("/auth")
+	auth.Use(authorization)
+	{
+		auth.POST("/film/:id", createMessage)
+	}
+
 	main := router.Group("/")
 	{
 		main.GET("/person/:id", getPerson)

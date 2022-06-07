@@ -48,7 +48,7 @@ func getFilm(ctx *gin.Context) {
 		playlists = []*database.Playlist{}
 	}
 	if discussion == nil {
-		discussion = []*database.DiscussionItem{}
+		discussion = []*database.Message{}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
