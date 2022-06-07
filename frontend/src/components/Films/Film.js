@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from "react";
+import {useState, useCallback, useEffect, useContext} from "react";
 
 import Errors from "../Errors/Errors";
 import PeopleList from "./PeopleList";
@@ -6,8 +6,11 @@ import PlaylistsList from "../Playlists/PlaylistsList"
 import Discussion from "../Discussion/Discussion"
 import {Link} from "react-router-dom";
 import Rate from "../Rate/Rate";
+import AuthContext from '../../db/auth-context';
 
 const Film = (props) => {
+    const authContext = useContext(AuthContext);
+
     const [errors, setErrors] = useState({});
     const [film, setFilm] = useState({
         AltName: {String: "", Valid: false},
@@ -20,6 +23,7 @@ const Film = (props) => {
     const [people, setPeople] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [discussion, setDiscussion] = useState([]);
+    const [likeStatus, setLikeStatus] = useState(0);
     const [status, setStatus] = useState(false);
 
     const fetchFilmHandler = useCallback(async () => {
@@ -42,12 +46,31 @@ const Film = (props) => {
                 setPeople(data.cast);
                 setPlaylists(data.playlists);
                 setDiscussion(data.discussion);
+                if (authContext.loggedIn) {
+                    try {
+                        const response = await fetch('/auth/film/rateStatus/' + props.id,
+                            {
+                                method: "POST",
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + authContext.token,
+                                },
+                            }
+                        );
+                        const data = await response.json();
+                        if (response.ok) {
+                            setLikeStatus(data.rate);
+                        }
+                    } catch (error) {
+                        setErrors({"error": error.message});
+                    }
+                }
                 setStatus(true);
             }
         } catch (error) {
             setErrors({ "error": error.message });
         }
-    }, [props.id]);
+    }, [props.id, authContext]);
 
     useEffect(() => {
         fetchFilmHandler();
@@ -102,9 +125,10 @@ const Film = (props) => {
                     </div>
                 </div>
                 <Rate
+                    key={film.ID}
                     Like={film.LikeAmount}
                     Dislike={film.DislikeAmount}
-                    Status={0}
+                    Status={likeStatus}
                     Addr={'film'}
                     ID={film.ID}
                 />

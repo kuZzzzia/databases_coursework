@@ -3,7 +3,6 @@ import Errors from "../Errors/Errors";
 import AuthContext from '../../db/auth-context';
 
 const Rate = (props) => {
-    console.log(props);
     const authContext = useContext(AuthContext);
 
     const [errors, setErrors] = useState({});
