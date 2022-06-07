@@ -3,7 +3,7 @@ import {useState, useCallback, useEffect} from "react";
 import Errors from "../Errors/Errors";
 import PeopleList from "./PeopleList";
 import PlaylistsList from "../Playlists/PlaylistsList"
-import DiscussionList from "../Discussion/DiscussionList"
+import Discussion from "../Discussion/Discussion"
 import {Link} from "react-router-dom";
 
 const Film = (props) => {
@@ -68,15 +68,6 @@ const Film = (props) => {
             <PlaylistsList
                 playlists={playlists}
             />;
-    //
-    // const discussionContent =
-    //     discussion.length === 0 ?
-    //         <p></p>
-    //         :
-    //         <DiscussionList
-    //             discussion={discussion}
-    //         />;
-
 
     const poster = '/' + film.Poster;
     const name = film.Name;
@@ -113,7 +104,10 @@ const Film = (props) => {
                     {playlistsContent}
                     {peopleContent}
                 </div>
-                {/*{discussionContent}*/}
+                <Discussion
+                    discussion={discussion}
+                    filmID={props.id}
+                />
             </div>
             : <div>Processing...</div>
         : Errors(errors);
