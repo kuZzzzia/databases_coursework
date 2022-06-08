@@ -19,6 +19,11 @@ func signUp(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	user, err := database.Authenticate(user.Username, user.Password)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Sign in failed."})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"msg": "Signed up successfully.",
 		"jwt": generateJWT(user),
