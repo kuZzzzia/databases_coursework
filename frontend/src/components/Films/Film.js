@@ -51,6 +51,9 @@ const Film = (props) => {
                         const response = await fetch('/auth/film/rateStatus/' + props.id,
                             {
                                 method: "POST",
+                                body: JSON.stringify({
+                                    Src: 'film'
+                                }),
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'Authorization': 'Bearer ' + authContext.token,

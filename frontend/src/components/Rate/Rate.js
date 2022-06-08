@@ -20,7 +20,8 @@ const Rate = (props) => {
                     {
                         method: 'POST',
                         body: JSON.stringify({
-                            Like : true
+                            Like : true,
+                            Src : props.Addr
                         }),
                         headers: {
                             'Content-Type': 'application/json',
@@ -67,7 +68,8 @@ const Rate = (props) => {
                     {
                         method: 'POST',
                         body: JSON.stringify({
-                            Like : false
+                            Like : false,
+                            Src : props.Addr
                         }),
                         headers: {
                             'Content-Type': 'application/json',
