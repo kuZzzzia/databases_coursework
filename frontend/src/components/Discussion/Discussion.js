@@ -1,6 +1,6 @@
 import {useState} from "react";
 import PostForm from "./PostForm";
-import PostsList from "./PostList";
+import PostsList from "./PostsList";
 
 const Discussion = (props) => {
     const [posts, setPosts] = useState(props.discussion);
@@ -11,7 +11,7 @@ const Discussion = (props) => {
 
     return (
         <section>
-            <h4 className="pb-4">Discussion</h4>
+            <h5 className="pb-4 pt-4">Discussion</h5>
             <PostsList posts={posts}/>
             <PostForm onAddPost={addPostHandler} filmID={props.filmID}/>
         </section>

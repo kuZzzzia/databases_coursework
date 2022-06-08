@@ -135,10 +135,8 @@ const Film = (props) => {
                     Addr={'film'}
                     ID={film.ID}
                 />
-                <div className="row" >
-                    {playlistsContent}
-                    {peopleContent}
-                </div>
+                {peopleContent}
+                {playlistsContent}
                 <Discussion
                     discussion={discussion}
                     filmID={props.id}
