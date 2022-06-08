@@ -1,7 +1,6 @@
 import FilmCard from "./FilmCard";
 
 const FilmSearchContainer = (props) => {
-    console.log(props)
     return (
         <div className="card-columns">
             {props.films.map((film) => (
