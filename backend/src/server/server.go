@@ -26,6 +26,7 @@ func setUpRouter() *gin.Engine {
 	auth.Use(authorization)
 	{
 		auth.POST("/film/:id", createMessage)
+		auth.POST("/playlist/create", createPlaylist)
 		auth.POST("/film/rate/:id", rate)
 		auth.POST("/playlist/rate/:id", rate)
 		auth.POST("/film/rateStatus/:id", getRating)

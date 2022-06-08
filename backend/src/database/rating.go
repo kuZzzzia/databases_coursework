@@ -3,8 +3,8 @@ package database
 import "log"
 
 type Rate struct {
-	Src  string
-	Like bool
+	Src  string `binding:"required"`
+	Like bool   `binding:"required"`
 }
 
 const (
@@ -15,9 +15,8 @@ const (
 )
 
 func AddRate(query string, userID int, likeStatus bool, destID int) error {
-	insert, err := db.Query(query,
+	_, err := db.Query(query,
 		userID, destID, likeStatus, likeStatus)
-	defer insert.Close()
 	if err != nil {
 		return err
 	}

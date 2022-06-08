@@ -1,13 +1,14 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"log"
 )
 
 type Playlist struct {
 	ID            int
-	Title         string
+	Title         string `binding:"required"`
 	Description   sql.NullString
 	Rating        int
 	LikeAmount    int
@@ -69,4 +70,56 @@ func FetchPlaylist(id int) (*Playlist, error) {
 	}
 
 	return playlist, nil
+}
+
+func AddPlaylist(playlist *Playlist, userID int) error {
+	var err error
+
+	ctx := context.Background()
+	tx, err := db.BeginTx(ctx, &sql.TxOptions{
+		Isolation: sql.LevelSerializable,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	var playlistID int
+	err = tx.QueryRow(
+		"SELECT `AUTO_INCREMENT` FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'Film_Rec_System' AND TABLE_NAME = 'Playlist'").
+		Scan(&playlistID)
+	if err != nil {
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+		return err
+	}
+	if len(playlist.Description.String) == 0 {
+		_, err = tx.ExecContext(ctx,
+			"INSERT INTO Playlist(PlaylistTitle, UserID) VALUES (?, ?)",
+			playlist.Title, userID)
+	} else {
+		_, err = tx.ExecContext(ctx,
+			"INSERT INTO Playlist(PlaylistTitle, `Description`, UserID) VALUES (?, ?, ?)",
+			playlist.Title, playlist.Description.String, userID)
+	}
+	if err != nil {
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+		return err
+	}
+	for _, film := range playlist.Films {
+		_, err = tx.ExecContext(ctx, "INSERT INTO Playlist_Film_INT(FilmID, PlaylistID) VALUES (?, ?)",
+			film.ID, playlistID)
+		if err != nil {
+			errRollback := tx.Rollback()
+			if errRollback != nil {
+				return errRollback
+			}
+			return err
+		}
+	}
+	err = tx.Commit()
+	return err
 }

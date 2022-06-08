@@ -7,7 +7,7 @@ import (
 
 type Message struct {
 	ID       int
-	Review   string
+	Review   string `binding:"required,min=5,max=63"`
 	UserName sql.NullString
 	FilmID   int
 }
@@ -43,9 +43,8 @@ func AddMessage(user *User, message *Message, filmID int) error {
 		String: user.Username,
 		Valid:  true,
 	}
-	insert, err := db.Query("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
+	_, err := db.Query("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
 		message.Review, user.ID, filmID)
-	defer insert.Close()
 	if err != nil {
 		return err
 	}
