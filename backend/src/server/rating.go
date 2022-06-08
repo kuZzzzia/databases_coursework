@@ -7,63 +7,52 @@ import (
 	"strconv"
 )
 
-func rateFilm(ctx *gin.Context) {
-	paramID := ctx.Param("id")
-	id, err := strconv.Atoi(paramID)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid film ID."})
-		return
-	}
+func rate(ctx *gin.Context) {
 	rate := new(database.Rate)
 	if err := ctx.Bind(rate); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	paramID := ctx.Param("id")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid" + rate.Src + "ID."})
+		return
+	}
+
 	user, err := currentUser(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := database.AddRateToFilm(user.ID, rate.Like, id); err != nil {
+	var query string
+	if rate.Src == "film" {
+		query = database.AddRatingToFilm
+	} else if rate.Src == "playlist" {
+		query = database.AddRatingToPlaylist
+	} else {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "This service is unavailable"})
+		return
+	}
+	if err := database.AddRate(query, user.ID, rate.Like, id); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"msg": "Film rated successfully.",
+		"msg": rate.Src + " rated successfully.",
 	})
 }
 
-func ratePlaylist(ctx *gin.Context) {
-	paramID := ctx.Param("id")
-	id, err := strconv.Atoi(paramID)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid playlist ID."})
-		return
-	}
+func getRating(ctx *gin.Context) {
 	rate := new(database.Rate)
 	if err := ctx.Bind(rate); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	user, err := currentUser(ctx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if err := database.AddRateToPlaylist(user.ID, rate.Like, id); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"msg": "Film rated successfully.",
-	})
-}
-
-func getFilmRate(ctx *gin.Context) {
 	paramID := ctx.Param("id")
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid film ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid" + rate.Src + "ID."})
 		return
 	}
 	user, err := currentUser(ctx)
@@ -71,36 +60,22 @@ func getFilmRate(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	rate, err := database.GetFilmRateByUser(user.ID, id)
+	var query string
+	if rate.Src == "film" {
+		query = database.GetUserRatingOfFilm
+	} else if rate.Src == "playlist" {
+		query = database.GetUserRatingOfPlaylist
+	} else {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "This service is unavailable"})
+		return
+	}
+	rating, err := database.GetUserRate(query, user.ID, id)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"msg":  "Film rate queried successfully.",
-		"rate": rate,
-	})
-}
-
-func getPlaylistRate(ctx *gin.Context) {
-	paramID := ctx.Param("id")
-	id, err := strconv.Atoi(paramID)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid playlist ID."})
-		return
-	}
-	user, err := currentUser(ctx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	rate, err := database.GetFilmRateByUser(user.ID, id)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"msg":  "Film rate queried successfully.",
-		"rate": rate,
+		"msg":  rate.Src + " rate queried successfully.",
+		"rate": rating,
 	})
 }
