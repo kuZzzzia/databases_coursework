@@ -51,3 +51,28 @@ func createPlaylist(ctx *gin.Context) {
 		"message": "Playlist created successfully.",
 	})
 }
+
+func deletePlaylist(ctx *gin.Context) {
+	paramID := ctx.Param("id")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid playlist ID."})
+		return
+	}
+
+	user, err := currentUser(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err = database.DeletePlaylist(id, user.ID)
+	if err != nil {
+		log.Println(err.Error())
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Unable to delete playlist"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Playlist deleted successfully.",
+	})
+}

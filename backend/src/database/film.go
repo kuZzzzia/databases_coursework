@@ -128,7 +128,7 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 		cast = append(cast, castItem)
 	}
 
-	playlists, err := FetchPlaylistsForFilm(id)
+	playlists, err := FetchPlaylists(playlistsForFilm, id)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

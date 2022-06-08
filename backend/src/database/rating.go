@@ -4,7 +4,7 @@ import "log"
 
 type Rate struct {
 	Src  string `binding:"required"`
-	Like bool   `binding:"required"`
+	Like bool
 }
 
 const (
@@ -18,6 +18,7 @@ func AddRate(query string, userID int, likeStatus bool, destID int) error {
 	_, err := db.Exec(query,
 		userID, destID, likeStatus, likeStatus)
 	if err != nil {
+		log.Println(err.Error())
 		return err
 	}
 	return err

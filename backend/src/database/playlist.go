@@ -17,11 +17,16 @@ type Playlist struct {
 	Films         []*Film
 }
 
-func FetchPlaylistsForFilm(id int) ([]*Playlist, error) {
+const (
+	playlistsForFilm    = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM (SELECT PlaylistID AS id_int FROM Playlist_Film_INT WHERE FilmID = ?) as i LEFT JOIN Playlist AS p ON id_int = p.PlaylistID ORDER BY rate DESC"
+	PlaylistsForProfile = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
+)
+
+func FetchPlaylists(query string, id int) ([]*Playlist, error) {
 	var playlists []*Playlist
 
 	results, err := db.Query(
-		"SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM (SELECT PlaylistID AS id_int FROM Playlist_Film_INT WHERE FilmID = ?) as i LEFT JOIN Playlist AS p ON id_int = p.PlaylistID ORDER BY rate DESC",
+		query,
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
@@ -47,6 +52,7 @@ func FetchPlaylistsForFilm(id int) ([]*Playlist, error) {
 func FetchPlaylist(id int) (*Playlist, error) {
 	playlist := new(Playlist)
 
+	//TODO: add films
 	err := db.QueryRow(
 		"SELECT PlaylistID, PlaylistTitle, `Description` FROM Playlist WHERE PlaylistID = ?",
 		id).
@@ -121,5 +127,14 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 		}
 	}
 	err = tx.Commit()
+	return err
+}
+
+func DeletePlaylist(playlistId, userId int) error {
+	_, err := db.Exec("DELETE FROM Playlist WHERE PlaylistID = ? AND UserID = ?",
+		playlistId, userId)
+	if err != nil {
+		return err
+	}
 	return err
 }

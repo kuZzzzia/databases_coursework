@@ -31,6 +31,9 @@ func setUpRouter() *gin.Engine {
 		auth.POST("/playlist/rate/:id", rate)
 		auth.POST("/film/rateStatus/:id", getRating)
 		auth.POST("/playlist/rateStatus/:id", getRating)
+		auth.POST("/profile", getProfile)
+		auth.POST("/delete/user", deleteUser)
+		auth.POST("/delete/playlist/:id", deletePlaylist)
 	}
 
 	main := router.Group("/")
