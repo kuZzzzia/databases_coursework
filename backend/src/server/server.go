@@ -22,10 +22,25 @@ func setUpRouter() *gin.Engine {
 
 	}
 
+	auth := router.Group("/auth")
+	auth.Use(authorization)
+	{
+		auth.POST("/film/:id", createMessage)
+		auth.POST("/playlist/create", createPlaylist)
+		auth.POST("/film/rate/:id", rate)
+		auth.POST("/playlist/rate/:id", rate)
+		auth.POST("/film/rateStatus/:id", getRating)
+		auth.POST("/playlist/rateStatus/:id", getRating)
+		auth.POST("/profile", getProfile)
+		auth.POST("/delete/user", deleteUser)
+		auth.POST("/delete/playlist/:id", deletePlaylist)
+	}
+
 	main := router.Group("/")
 	{
 		main.GET("/person/:id", getPerson)
 		main.GET("/film/:id", getFilm)
+		main.GET("/playlist/:id", getPlaylist)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) { ctx.JSON(http.StatusNotFound, gin.H{}) })

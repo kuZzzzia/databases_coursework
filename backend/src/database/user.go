@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"crypto/rand"
 	"golang.org/x/crypto/bcrypt"
 	"log"
@@ -38,11 +39,8 @@ func AddUser(user *User) error {
 	user.Salt = salt
 	user.HashedPassword = hashedPassword
 
-	db := GetDBConnection()
-
-	insert, err := db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
+	_, err = db.Exec("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
 		user.Username, user.HashedPassword, user.Salt)
-	defer insert.Close()
 	if err != nil {
 		return err
 	}
@@ -51,7 +49,7 @@ func AddUser(user *User) error {
 
 func Authenticate(username, password string) (*User, error) {
 	user := new(User)
-	db := GetDBConnection()
+
 	err := db.QueryRow("SELECT UserID, Password, Hash FROM User WHERE Username = ?", username).
 		Scan(&user.ID, &user.HashedPassword, &user.Salt)
 	if err != nil {
@@ -70,8 +68,39 @@ func FetchUser(id int) (*User, error) {
 	user.ID = id
 	err := db.QueryRow("SELECT Username FROM User WHERE UserID = ?", id).Scan(&user.Username)
 	if err != nil {
-		log.Println("Error fetching user")
+		log.Println("Error fetching user, i'm here")
 		return nil, err
 	}
 	return user, nil
+}
+
+func DeleteUser(id int) error {
+	ctx := context.Background()
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = tx.ExecContext(ctx,
+		"DELETE FROM Playlist AS p WHERE UserID = ? AND NOT EXISTS(SELECT * FROM Playlist_Film_INT AS `INT` WHERE p.PlaylistID = `INT`.PlaylistID)", id)
+	if err != nil {
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx,
+		"DELETE FROM User WHERE UserID = ?", id)
+	if err != nil {
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			return errRollback
+		}
+		return err
+	}
+
+	err = tx.Commit()
+	return nil
 }

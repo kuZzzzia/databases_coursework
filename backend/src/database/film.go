@@ -6,7 +6,7 @@ import (
 )
 
 type Film struct {
-	ID            int
+	ID            int `binding:"required"`
 	Name          string
 	AltName       sql.NullString
 	Poster        string
@@ -30,7 +30,7 @@ func FetchFilms(pattern string) ([]*Film, error) {
 	var films []*Film
 
 	results, err := db.Query(
-		"SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear FROM Film WHERE FullName = ? OR AlternativeName = ?",
+		"SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film WHERE FullName = ? OR AlternativeName = ?",
 		pattern, pattern)
 	if err != nil {
 		log.Println("Error fetching films")
@@ -42,7 +42,7 @@ func FetchFilms(pattern string) ([]*Film, error) {
 	for results.Next() {
 		film := new(Film)
 
-		err = results.Scan(&film.ID, &film.Name, &film.AltName, &film.Poster, &film.Duration, &film.Year)
+		err = results.Scan(&film.ID, &film.Name, &film.AltName, &film.Poster, &film.Duration, &film.Year, &film.Rating)
 		if err != nil {
 			log.Println("Error fetching films")
 			return nil, err
@@ -80,7 +80,7 @@ func FetchFilmByDirector(id int) ([]*Film, error) {
 	return films, nil
 }
 
-func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, error) {
+func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 	film := new(Film)
 
 	err := db.QueryRow(
@@ -128,10 +128,15 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*DiscussionItem, erro
 		cast = append(cast, castItem)
 	}
 
+	playlists, err := FetchPlaylists(playlistsForFilm, id)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
 	discussion, err := FetchDiscussionsForFilm(id)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}
 
-	return film, cast, nil, discussion, nil
+	return film, cast, playlists, discussion, nil
 }

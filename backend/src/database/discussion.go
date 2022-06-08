@@ -5,19 +5,18 @@ import (
 	"log"
 )
 
-type DiscussionItem struct {
+type Message struct {
 	ID       int
-	Date     string
-	Review   sql.NullString
-	UserID   sql.NullInt16
+	Review   string `binding:"required,min=5,max=63"`
 	UserName sql.NullString
+	FilmID   int
 }
 
-func FetchDiscussionsForFilm(id int) ([]*DiscussionItem, error) {
-	var discussion []*DiscussionItem
+func FetchDiscussionsForFilm(id int) ([]*Message, error) {
+	var discussion []*Message
 
 	results, err := db.Query(
-		"SELECT DiscussionID, `Date`, Review, UserID, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY `Date`",
+		"SELECT DiscussionID, Review, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY DiscussionID DESC",
 		id)
 	if err != nil {
 		log.Println("Error fetching roles")
@@ -26,9 +25,9 @@ func FetchDiscussionsForFilm(id int) ([]*DiscussionItem, error) {
 
 	defer results.Close()
 	for results.Next() {
-		discussionItem := new(DiscussionItem)
+		discussionItem := new(Message)
 
-		err = results.Scan(&discussionItem.ID, &discussionItem.Date, &discussionItem.Review, &discussionItem.UserID, &discussionItem.UserName)
+		err = results.Scan(&discussionItem.ID, &discussionItem.Review, &discussionItem.UserName)
 		if err != nil {
 			log.Println("Error fetching roles")
 			return nil, err
@@ -37,4 +36,17 @@ func FetchDiscussionsForFilm(id int) ([]*DiscussionItem, error) {
 		discussion = append(discussion, discussionItem)
 	}
 	return discussion, nil
+}
+
+func AddMessage(user *User, message *Message, filmID int) error {
+	message.UserName = sql.NullString{
+		String: user.Username,
+		Valid:  true,
+	}
+	_, err := db.Exec("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
+		message.Review, user.ID, filmID)
+	if err != nil {
+		return err
+	}
+	return err
 }
