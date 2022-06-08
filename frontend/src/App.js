@@ -10,6 +10,7 @@ import FilmSearchPage from "./pages/FilmSearchPage"
 import PersonPage from "./pages/PersonPage";
 import FilmPage from "./pages/FilmPage";
 import PlaylistPage from "./pages/PlaylistPage";
+import PlaylistCreationPage from "./pages/PlaylistCreationPage";
 
 function App() {
   const authContext = useContext(AuthContext);
@@ -25,9 +26,10 @@ function App() {
                   authContext.loggedIn ?
                       <UserPage /> : <Navigate to="/auth" />
               }/>
-              {/*{authContext.loggedIn && (*/}
-              {/*    <Route path='/profile/playlist' element={<PlaylistCreatingPage />}/>*/}
-              {/*)}*/}
+              <Route path='/profile/playlist' element={
+                  authContext.loggedIn ?
+                      <PlaylistCreationPage /> : <Navigate to="/auth" />
+              }/>
               <Route path='/playlist/:id' element={<PlaylistPage />} />
               <Route path='/people' element={<PersonSearchPage />} />
               <Route path='/person/:id'  element={<PersonPage />} />

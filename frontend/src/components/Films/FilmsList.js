@@ -5,7 +5,7 @@ const FilmsList = (props) => {
         <div>
             {props.films.map((film) => (
                 <FilmRow
-                    key={film.FilmID}
+                    key={film.ID}
                     film={film}
                 />
             ))}

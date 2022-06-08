@@ -9,7 +9,6 @@ const Discussion = (props) => {
         setPosts((prevState) => { return [postData, ...prevState] });
     }
 
-
     return (
         <section>
             <h4 className="pb-4">Discussion</h4>

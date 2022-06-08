@@ -67,10 +67,10 @@ const PersonSearch = () => {
             <div className="container w-75">
                 <form onSubmit={submitHandler}>
                     <div className="form-row">
-                        <div className="col-9">
+                        <div className="ml-3 col-10 d-flex justify-content-center">
                             <input id="username" type="text" className="form-control" placeholder={"Найти персону..."} required ref={personRef} ></input>
                         </div>
-                        <div className="col">
+                        <div className="col d-flex justify-content-center">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>
                         </div>
                     </div>

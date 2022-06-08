@@ -1,6 +1,6 @@
 import Home from '../components/Home/Home';
 
-const UserPage = () => {
+const UserPage = (props) => {
     return <Home/>;
 };
 

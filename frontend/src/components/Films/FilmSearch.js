@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Errors from "../Errors/Errors";
 import FilmSearchContainer from "./FilmSearchContainer";
 
-const FilmSearch = () => {
+const FilmSearch = (props) => {
     const [searchStatus, setSearchStatus] = useState(false);
     const [films, setFilms] = useState([]);
     const [errors, setErrors] = useState({});
@@ -52,9 +52,14 @@ const FilmSearch = () => {
         films.length === 0 ?
             <p>No films found</p>
             :
-            <FilmSearchContainer
+            props.onAddFilm
+                ? <FilmSearchContainer
                 films={films}
-            />
+                onAddFilm={props.onAddFilm}
+                />
+                : <FilmSearchContainer
+                    films={films}
+                />
         : <p></p>;
 
     const header = 'Films';
@@ -64,13 +69,13 @@ const FilmSearch = () => {
     return (
         <section>
             <h1 className="text-center">{header}</h1>
-            <div className="container w-75">
+            <div className="container w-75 pb-5">
                 <form onSubmit={submitHandler}>
                     <div className="form-row">
-                        <div className="col-9">
+                        <div className="ml-3 col-10 d-flex justify-content-center">
                             <input id="username" type="text" className="form-control" placeholder={"Найти фильм..."} required ref={filmRef} ></input>
                         </div>
-                        <div className="col">
+                        <div className="col d-flex justify-content-center">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>
                         </div>
                     </div>
