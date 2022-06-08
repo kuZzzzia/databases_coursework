@@ -43,7 +43,7 @@ func AddMessage(user *User, message *Message, filmID int) error {
 		String: user.Username,
 		Valid:  true,
 	}
-	_, err := db.Query("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
+	_, err := db.Exec("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
 		message.Review, user.ID, filmID)
 	if err != nil {
 		return err

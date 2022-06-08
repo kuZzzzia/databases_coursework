@@ -15,7 +15,7 @@ const (
 )
 
 func AddRate(query string, userID int, likeStatus bool, destID int) error {
-	_, err := db.Query(query,
+	_, err := db.Exec(query,
 		userID, destID, likeStatus, likeStatus)
 	if err != nil {
 		return err

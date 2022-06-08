@@ -38,7 +38,7 @@ func AddUser(user *User) error {
 	user.Salt = salt
 	user.HashedPassword = hashedPassword
 
-	_, err = db.Query("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
+	_, err = db.Exec("INSERT INTO User(Username, Password, Hash) VALUES (?, ?, ?)",
 		user.Username, user.HashedPassword, user.Salt)
 	if err != nil {
 		return err
