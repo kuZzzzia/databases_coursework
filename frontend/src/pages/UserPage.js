@@ -1,7 +1,7 @@
-import Home from '../components/Home/Home';
+import User from '../components/User/User';
 
-const UserPage = (props) => {
-    return <Home/>;
+const UserPage = () => {
+    return <User/>;
 };
 
 export default UserPage;

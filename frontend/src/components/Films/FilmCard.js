@@ -9,8 +9,7 @@ const FilmCard = (props) => {
     const id = "/film/" + props.film.ID;
 
 
-    function submitHandler(event) {
-        event.preventDefault();
+    function submitHandler() {
         props.onAddFilm(props.film)
     }
 

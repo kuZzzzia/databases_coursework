@@ -10,8 +10,8 @@ const Playlist = (props) => {
 
     const [errors, setErrors] = useState({});
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState({});
-    const [userName, setUserName] = useState({});
+    const [description, setDescription] = useState({String: '', Valid: false});
+    const [userName, setUserName] = useState({String: '', Valid: false});
     const [films, setFilms] = useState([]);
     const [likeAmount, setLikeAmount] = useState(0);
     const [dislikeAmount, setDislikeAmount] = useState(0);
@@ -34,12 +34,12 @@ const Playlist = (props) => {
                     setErrors(data['error']);
                 }
             } else {
-                setTitle(data.title);
-                setDescription(data.description);
-                setUserName(data.userName);
-                setFilms(data.films);
-                setLikeAmount(data.likeAmount);
-                setDislikeAmount(data.dislikeAmount);
+                setTitle(data.playlist.Title);
+                setDescription(data.playlist.Description);
+                setUserName(data.playlist.UserName);
+                setFilms(data.playlist.Films);
+                setLikeAmount(data.playlist.LikeAmount);
+                setDislikeAmount(data.playlist.DislikeAmount);
                 if (authContext.loggedIn) {
                     try {
                         const response = await fetch('/auth/playlist/rateStatus/' + props.id,
@@ -81,24 +81,24 @@ const Playlist = (props) => {
                 films={films}
             />;
 
-    const descriptionContent = description.Valid ? description.String : '';
+    const descriptionContent = description.Valid ?  'Описание: ' + description.String : '';
     const user = userName.Valid ? userName.String : 'Пользователь удалён';
 
 
     const Content = Object.keys(errors).length === 0 ?
         status ?
             <div className="card-body">
-                <h5 className="card-title">{title}</h5>
+                <h5 className="card-title">Заголовок: {title}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">Автор подборки: {user}</h6>
                 <p className="card-text">{descriptionContent}</p>
                 {filmsContent}
                 <Rate
-                    key={props.ID}
+                    key={props.id}
                     Like={likeAmount}
                     Dislike={dislikeAmount}
                     Status={likeStatus}
                     Addr={'playlist'}
-                    ID={props.ID}
+                    ID={props.id}
                 />
             </div>
             : <div>Processing...</div>

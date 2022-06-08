@@ -10,10 +10,9 @@ const RoleRow = (props) => {
                 <div className="col-sm">
                     Год производства: {props.role.Year.Int16}
                 </div> : <div></div>}
-            {props.role.FilmRating !== -1 ?
-                <div className="col-2">
-                    Рейтинг: {props.role.FilmRating}%
-                </div> : <div>Нет оценки</div>}
+            <div className="col-2">
+                {props.role.FilmRating !== -1 ? 'Рейтинг: ' + props.role.FilmRating + '%' : 'Нет оценки'}
+            </div>
             {props.role.Name.Valid ?
                 <div className="col-sm">
                     Имя персонажа: {props.role.Name.String}

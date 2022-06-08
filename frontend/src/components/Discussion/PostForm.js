@@ -8,11 +8,11 @@ const PostForm = (props) => {
 
     const [contentValue, setContentValue] = useState('');
 
-    const [userName, setUserName] = useState({});
+    const [errors, setErrors] = useState({});
 
     const populateFields = useCallback(() => {
         if (props.post) {
-            setUserName(props.post.Username);
+            setErrors(props.post.Username);
             setContentValue(props.post.Review);
         }
     }, [props.post]);
@@ -23,7 +23,7 @@ const PostForm = (props) => {
 
     async function submitHandler(event) {
         event.preventDefault();
-        setUserName({});
+        setErrors({});
 
         try {
             const method = 'POST';
@@ -47,25 +47,25 @@ const PostForm = (props) => {
                     throw new Error(errorText);
                 }
                 if ((typeof data['error'] === 'string')) {
-                    setUserName({ 'unknown': data['error'] })
+                    setErrors({ 'unknown': data['error'] })
                 } else {
-                    setUserName(data['error']);
+                    setErrors(data['error']);
                 }
             } else {
-                setUserName({});
+                setErrors({});
                 setContentValue('');
                 if (props.onAddPost) {
                     props.onAddPost(data.post);
                 }
             }
         } catch (error) {
-            setUserName({ "error": error.message });
+            setErrors({ "error": error.message });
         }
     }
 
     const contentChangeHandler = (event) => { setContentValue(event.target.value) }
 
-    const errorContent = Object.keys(userName).length === 0 ? null : Errors(userName);
+    const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
     const submitButtonText = 'Add Post';
 
     return (

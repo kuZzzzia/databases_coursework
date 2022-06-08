@@ -10,10 +10,9 @@ const FilmRow = (props) => {
                 <div className="col-sm">
                     Год производства: {props.film.Year.Int16}
                 </div> : <div></div>}
-            {props.film.FilmRating !== -1 ?
-                <div className="col-2">
-                    Рейтинг: {props.film.FilmRating}%
-                </div> : <div>Нет оценки</div>}
+            <div className="col-2">
+                {props.film.FilmRating !== -1 ? 'Рейтинг: ' + props.film.FilmRating + '%' : 'Нет оценки'}
+            </div>
             <div className="col-sm">
                 <Link className="card-link-link" to={'/film/'+props.film.FilmID}>View more</Link>
             </div>

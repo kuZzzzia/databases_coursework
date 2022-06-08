@@ -8,6 +8,7 @@ const PlaylistsList = (props) => {
                 <PlaylistRow
                     key={playlist.ID}
                     playlist={playlist}
+                    onDeletePlaylist={props.onDeletePlaylist}
                 />
             ))}
         </div>
