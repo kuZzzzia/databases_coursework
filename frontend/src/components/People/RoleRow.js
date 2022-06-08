@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 const RoleRow = (props) => {
     return (
-        <div className="row">
+        <div className="row pb-2">
             <div className="col-sm">
                 Фильм: {props.role.FilmName}
             </div>

@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 const PersonRow = (props) => {
     return (
-        <div className="row">
+        <div className="row pb-2">
             <div className="col-sm">
                 {props.person.Name}
             </div>
