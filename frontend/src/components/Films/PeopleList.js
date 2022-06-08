@@ -2,14 +2,17 @@ import PersonRow from "./PersonRow";
 
 const PeopleList = (props) => {
     return (
-        <div className="col">
+        <div>
             <h5>Персонажи</h5>
-            {props.people.map((person) => (
-                <PersonRow
-                    key={person.ID}
-                    person={person}
-                />
-            ))}
+            <div className="col">
+
+                {props.people.map((person) => (
+                    <PersonRow
+                        key={person.ID}
+                        person={person}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
