@@ -1,12 +1,16 @@
-import {useState, useCallback, useEffect} from "react";
+import {useState, useCallback, useEffect, useContext} from "react";
 
 import Errors from "../Errors/Errors";
 import PeopleList from "./PeopleList";
-import PlaylistsList from "../Playlists/PlaylistsList"
-import DiscussionList from "../Discussion/DiscussionList"
+import PlaylistsList from "../Playlist/PlaylistsList"
+import Discussion from "../Discussion/Discussion"
 import {Link} from "react-router-dom";
+import Rate from "../Rate/Rate";
+import AuthContext from '../../db/auth-context';
 
 const Film = (props) => {
+    const authContext = useContext(AuthContext);
+
     const [errors, setErrors] = useState({});
     const [film, setFilm] = useState({
         AltName: {String: "", Valid: false},
@@ -19,6 +23,7 @@ const Film = (props) => {
     const [people, setPeople] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [discussion, setDiscussion] = useState([]);
+    const [likeStatus, setLikeStatus] = useState(0);
     const [status, setStatus] = useState(false);
 
     const fetchFilmHandler = useCallback(async () => {
@@ -38,45 +43,58 @@ const Film = (props) => {
                 }
             } else {
                 setFilm(data.film);
-                setPeople(data.people);
+                setPeople(data.cast);
                 setPlaylists(data.playlists);
                 setDiscussion(data.discussion);
+                if (authContext.loggedIn) {
+                    try {
+                        const response = await fetch('/auth/film/rateStatus/' + props.id,
+                            {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    Src: 'film'
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + authContext.token,
+                                },
+                            }
+                        );
+                        const data = await response.json();
+                        if (response.ok) {
+                            setLikeStatus(data.rate);
+                        }
+                    } catch (error) {
+                        setErrors({"error": error.message});
+                    }
+                }
                 setStatus(true);
             }
         } catch (error) {
             setErrors({ "error": error.message });
         }
-    }, [props.id]);
+    }, [props.id, authContext]);
 
     useEffect(() => {
         fetchFilmHandler();
     }, [fetchFilmHandler]);
 
 
-    // const peopleContent =
-    //     people.length === 0 ?
-    //         <p>Еще нет назначенных на роли актеров</p>
-    //         :
-    //         <PeopleList
-    //             people={people}
-    //         />;
-    //
-    // const playlistsContent =
-    //     playlists.length === 0 ?
-    //         <p>Нет подборок с данным фильмом</p>
-    //         :
-    //         <PlaylistsList
-    //             playlists={playlists}
-    //         />;
-    //
-    // const discussionContent =
-    //     discussion.length === 0 ?
-    //         <p></p>
-    //         :
-    //         <DiscussionList
-    //             discussion={discussion}
-    //         />;
+    const peopleContent =
+        people.length === 0 ?
+            <p className="col">Еще нет назначенных на роли актеров</p>
+            :
+            <PeopleList
+                people={people}
+            />;
 
+    const playlistsContent =
+        playlists.length === 0 ?
+            <p className="col">Нет подборок с данным фильмом</p>
+            :
+            <PlaylistsList
+                playlists={playlists}
+            />;
 
     const poster = '/' + film.Poster;
     const name = film.Name;
@@ -109,11 +127,22 @@ const Film = (props) => {
                         {directorContent}
                     </div>
                 </div>
-                <div className="row " >
+                <Rate
+                    key={film.ID}
+                    Like={film.LikeAmount}
+                    Dislike={film.DislikeAmount}
+                    Status={likeStatus}
+                    Addr={'film'}
+                    ID={film.ID}
+                />
+                <div className="row" >
                     {playlistsContent}
+                    {peopleContent}
                 </div>
-                {peopleContent}
-                {discussionContent}
+                <Discussion
+                    discussion={discussion}
+                    filmID={props.id}
+                />
             </div>
             : <div>Processing...</div>
         : Errors(errors);
