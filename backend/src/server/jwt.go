@@ -1,11 +1,11 @@
 package server
 
 import (
-	"../database"
 	"encoding/json"
 	"errors"
+	"film-network/src/database"
 	"fmt"
-	"github.com/cristalhq/jwt"
+	"github.com/cristalhq/jwt/v4"
 	"log"
 	"strconv"
 	"time"
