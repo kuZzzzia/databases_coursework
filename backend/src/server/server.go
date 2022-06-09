@@ -19,7 +19,7 @@ func setUpRouter() *gin.Engine {
 		api.POST("/signIn", signIn)
 		api.POST("/people", getPeople)
 		api.POST("/films", getFilms)
-
+		api.POST("/categories", getCategories)
 	}
 
 	auth := router.Group("/auth")
