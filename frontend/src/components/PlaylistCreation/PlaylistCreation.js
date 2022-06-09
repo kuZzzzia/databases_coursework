@@ -61,7 +61,7 @@ const PlayListCreation = () => {
         setFilms((prevState) => {
             const dup = prevState.find(item => item.ID === filmData.ID)
             if (dup) {
-                setErrors({'error': 'Film ' + filmData.Name + ' is already added'})
+                setErrors({'error': 'Фильм ' + filmData.Name + ' уже добавлен'})
                 return prevState
             } else {
                 return [...prevState, filmData]
