@@ -70,7 +70,7 @@ const Playlist = (props) => {
     }, [props.id, authContext]);
 
     useEffect(() => {
-        fetchPlaylistHandler();
+        fetchPlaylistHandler().then();
     }, [fetchPlaylistHandler]);
 
     const filmsContent =

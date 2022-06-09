@@ -76,7 +76,7 @@ const Film = (props) => {
     }, [props.id, authContext]);
 
     useEffect(() => {
-        fetchFilmHandler();
+        fetchFilmHandler().then();
     }, [fetchFilmHandler]);
 
 

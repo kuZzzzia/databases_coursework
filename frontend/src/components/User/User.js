@@ -48,7 +48,7 @@ const User = (props) => {
     }, [authContext]);
 
     useEffect(() => {
-        fetchUserHandler();
+        fetchUserHandler().then();
     }, [fetchUserHandler]);
 
     async function deletePlaylistHandler(playlistID) {

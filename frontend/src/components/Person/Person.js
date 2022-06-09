@@ -42,7 +42,7 @@ const Person = (props) => {
     }, [props.id]);
 
     useEffect(() => {
-        fetchPersonHandler();
+        fetchPersonHandler().then();
     }, [fetchPersonHandler]);
 
 
