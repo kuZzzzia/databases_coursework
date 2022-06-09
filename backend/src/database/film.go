@@ -18,8 +18,8 @@ type Film struct {
 	Rating        int
 	LikeAmount    int
 	DislikeAmount int
-	Countries     []*string
-	Genres        []*string
+	Countries     []string
+	Genres        []string
 }
 
 type CastItem struct {
@@ -168,7 +168,7 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 	}
 	defer results.Close()
 	for results.Next() {
-		country := new(string)
+		var country string
 
 		err = results.Scan(&country)
 		if err != nil {
@@ -188,7 +188,7 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 	}
 	defer results.Close()
 	for results.Next() {
-		genre := new(string)
+		var genre string
 
 		err = results.Scan(&genre)
 		if err != nil {
@@ -207,10 +207,10 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 	}
 
 	if film.Genres == nil {
-		film.Genres = []*string{}
+		film.Genres = []string{}
 	}
 	if film.Countries == nil {
-		film.Countries = []*string{}
+		film.Countries = []string{}
 	}
 
 	return film, cast, playlists, discussion, nil
