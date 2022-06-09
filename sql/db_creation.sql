@@ -132,6 +132,18 @@ CREATE VIEW Film_Cast AS
 CREATE VIEW Film_Discussion_With_Users AS
     SELECT f.FilmID, d.DiscussionID, d.Review, d.Date, d.UserID, u.Username FROM Discussion AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
 
+CREATE VIEW Film_Genres AS
+    SELECT inter.FilmID, g.GenreName FROM Genre_Film_INT AS inter LEFT JOIN Genre AS g on inter.GenreID = g.GenreID;
+
+CREATE VIEW Film_Countries AS
+    SELECT inter.FilmID, c.CountryName FROM Country_Film_INT AS inter LEFT JOIN Country AS c on inter.CountryID = c.CountryID;
+
+CREATE VIEW Playlists_For_Film AS
+    SELECT inter.FilmID, p.PlaylistID, p.PlaylistTitle FROM Playlist_Film_INT as inter LEFT JOIN Playlist AS p on inter.PlaylistID = p.PlaylistID;
+
+CREATE VIEW Playlist_With_Username AS
+    SELECT  p.PlaylistID, p.PlaylistTitle, p.`Description`, u.Username FROM Playlist AS p LEFT JOIN User AS u ON p.UserID = u.UserID;
+
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 CREATE FUNCTION getFilmRating(id int)
