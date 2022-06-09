@@ -1,8 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Film_Rec_System;
 
 USE Film_Rec_System;
-DROP DATABASE Film_Rec_System;
-
 
 CREATE TABLE Film_Rec_System.Person (
     `PersonID` int AUTO_INCREMENT PRIMARY KEY,
