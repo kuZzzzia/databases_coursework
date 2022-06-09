@@ -1,8 +1,8 @@
 package server
 
 import (
-	"../config"
-	"../database"
+	"film-network/src/config"
+	"film-network/src/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

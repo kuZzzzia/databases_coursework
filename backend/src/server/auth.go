@@ -1,8 +1,8 @@
 package server
 
 import (
-	"../database"
 	_ "crypto/rand"
+	"film-network/src/database"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
