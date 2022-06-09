@@ -43,14 +43,7 @@ const PostForm = (props) => {
             const data = await response.json();
             if (!response.ok) {
                 let errorText = 'не удалось добавить комментарий';
-                if (!data.hasOwnProperty('error')) {
-                    throw new Error(errorText);
-                }
-                if ((typeof data['error'] === 'string')) {
-                    setErrors({ 'unknown': data['error'] })
-                } else {
-                    setErrors(data['error']);
-                }
+                throw new Error(errorText);
             } else {
                 setErrors({});
                 setContentValue('');

@@ -29,17 +29,10 @@ const Rate = (props) => {
                         },
                     }
                 );
-                const data = await response.json();
+                await response.json();
                 if (!response.ok) {
                     let errorText = 'не удалось оставить оценку';
-                    if (!data.hasOwnProperty('error')) {
-                        throw new Error(errorText);
-                    }
-                    if ((typeof data['error'] === 'string')) {
-                        setErrors({'unknown': data['error']})
-                    } else {
-                        setErrors(data['error']);
-                    }
+                    throw new Error(errorText);
                 } else {
                     state.Status === 0
                         ? setState({
@@ -77,17 +70,10 @@ const Rate = (props) => {
                         },
                     }
                 );
-                const data = await response.json();
+                await response.json();
                 if (!response.ok) {
                     let errorText = 'не удалось оставить оценку';
-                    if (!data.hasOwnProperty('error')) {
-                        throw new Error(errorText);
-                    }
-                    if ((typeof data['error'] === 'string')) {
-                        setErrors({'unknown': data['error']})
-                    } else {
-                        setErrors(data['error']);
-                    }
+                    throw new Error(errorText);
                 } else {
                     state.Status === 0
                         ? setState({
