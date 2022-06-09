@@ -33,27 +33,27 @@ func FetchFilms(search *Search) ([]*Film, error) {
 		args    []any
 		err     error
 	)
-	query := "SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film"
+	query := "SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film AS f"
 	if len(search.Pattern) != 0 {
 		query += " WHERE FullName = ? OR AlternativeName = ?"
 		args = append(args, search.Pattern, search.Pattern)
 		if len(search.Genre) != 0 {
-			query += " AND Genre = ?"
+			query += " AND EXISTS(SELECT * FROM Film_Genres AS g WHERE GenreName = ? AND g.FilmID = f.FilmID)"
 			args = append(args, search.Genre)
 		}
 		if len(search.Country) != 0 {
-			query += " AND Country = ?"
+			query += " AND EXISTS(SELECT * FROM Film_Countries AS c WHERE CountryName = ? AND c.FilmID = f.FilmID)"
 			args = append(args, search.Country)
 		}
 	} else if len(search.Genre) != 0 {
-		query += " WHERE Genre = ?"
+		query += " WHERE EXISTS(SELECT * FROM Film_Genres AS g WHERE GenreName = ? AND g.FilmID = f.FilmID"
 		args = append(args, search.Genre)
 		if len(search.Country) != 0 {
-			query += " ND Country = ?"
+			query += " AND EXISTS(SELECT * FROM Film_Countries AS c WHERE CountryName = ? AND c.FilmID = f.FilmID)"
 			args = append(args, search.Country)
 		}
 	} else if len(search.Country) != 0 {
-		query += " WHERE Country = ?"
+		query += " WHERE EXISTS(SELECT * FROM Film_Countries AS c WHERE CountryName = ? AND c.FilmID = f.FilmID)"
 		args = append(args, search.Country)
 	}
 	if len(args) != 0 {
@@ -157,10 +157,7 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 		cast = append(cast, castItem)
 	}
 
-	playlists, err := FetchPlaylists(playlistsForFilm, id)
-	if err != nil {
-		return nil, nil, nil, nil, err
-	}
+	playlists, _ := FetchPlaylists(playlistsForFilm, id)
 
 	discussion, err := FetchDiscussionsForFilm(id)
 	if err != nil {

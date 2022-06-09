@@ -18,7 +18,7 @@ type Playlist struct {
 }
 
 const (
-	playlistsForFilm    = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM (SELECT PlaylistID AS id_int FROM Playlist_Film_INT WHERE FilmID = ?) as i LEFT JOIN Playlist AS p ON id_int = p.PlaylistID ORDER BY rate DESC"
+	playlistsForFilm    = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
 	PlaylistsForProfile = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
 )
 
@@ -52,11 +52,10 @@ func FetchPlaylists(query string, id int) ([]*Playlist, error) {
 func FetchPlaylist(id int) (*Playlist, error) {
 	playlist := new(Playlist)
 
-	//TODO: add films
 	err := db.QueryRow(
-		"SELECT PlaylistID, PlaylistTitle, `Description` FROM Playlist WHERE PlaylistID = ?",
+		"SELECT PlaylistID, PlaylistTitle, `Description`, Username FROM Playlist_With_Username WHERE PlaylistID = ?",
 		id).
-		Scan(&playlist.ID, &playlist.Title, &playlist.Description)
+		Scan(&playlist.ID, &playlist.Title, &playlist.Description, &playlist.UserName)
 	if err != nil {
 		log.Println("Error fetching person")
 		return nil, err
@@ -73,6 +72,27 @@ func FetchPlaylist(id int) (*Playlist, error) {
 	if err != nil {
 		log.Println("Error fetching person")
 		return nil, err
+	}
+
+	results, err := db.Query(
+		"SELECT inter.FilmID, f.FullName, f.ProductionYear, getFilmRating(f.FilmID) FROM (SELECT FilmID FROM Playlist_Film_INT WHERE PlaylistID = ?) AS inter LEFT JOIN Film AS f ON inter.FilmID = f.FilmID",
+		id)
+	if err != nil {
+		log.Println("Error fetching roles")
+		return nil, err
+	}
+
+	defer results.Close()
+	for results.Next() {
+		film := new(Film)
+
+		err = results.Scan(&film.ID, &film.Name, &film.Year, &film.Rating)
+		if err != nil {
+			log.Println("Error fetching roles")
+			return nil, err
+		}
+
+		playlist.Films = append(playlist.Films, film)
 	}
 
 	return playlist, nil
