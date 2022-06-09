@@ -9,7 +9,7 @@ import (
 func getProfile(ctx *gin.Context) {
 	user, err := currentUser(ctx)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "нет доступа, авторизуйтесь"})
 		return
 	}
 
@@ -28,13 +28,13 @@ func getProfile(ctx *gin.Context) {
 func deleteUser(ctx *gin.Context) {
 	user, err := currentUser(ctx)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "нет доступа, авторизуйтесь"})
 		return
 	}
 
 	err = database.DeleteUser(user.ID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "нет удалось удалить пользователя"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{

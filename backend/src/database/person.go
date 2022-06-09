@@ -28,7 +28,7 @@ func FetchPeople(pattern string) ([]*Person, error) {
 		"SELECT PersonID, FullName, AlternativeName, Photo, DateOfBirth FROM Person WHERE FullName = ? OR AlternativeName = ?",
 		pattern, pattern)
 	if err != nil {
-		log.Println("Error fetching people")
+		log.Println("Error fetching people: " + err.Error())
 		return nil, err
 	}
 
@@ -39,7 +39,7 @@ func FetchPeople(pattern string) ([]*Person, error) {
 
 		err = results.Scan(&person.ID, &person.Name, &person.AltName, &person.Photo, &person.Date)
 		if err != nil {
-			log.Println("Error fetching people")
+			log.Println("Error fetching people: " + err.Error())
 			return nil, err
 		}
 
@@ -56,7 +56,7 @@ func FetchRoles(id int) ([]*Role, error) {
 		"SELECT FilmID, CharacterName, FilmName, ProductionYear, getFilmRating(FilmID) From Film_Cast WHERE PersonID = ? ORDER BY ProductionYear DESC",
 		id)
 	if err != nil {
-		log.Println("Error fetching roles")
+		log.Println("Error fetching roles: " + err.Error())
 		return nil, err
 	}
 
@@ -66,7 +66,7 @@ func FetchRoles(id int) ([]*Role, error) {
 
 		err = results.Scan(&role.FilmID, &role.Name, &role.FilmName, &role.Year, &role.FilmRating)
 		if err != nil {
-			log.Println("Error fetching roles")
+			log.Println("Error fetching roles: " + err.Error())
 			return nil, err
 		}
 
@@ -82,7 +82,7 @@ func FetchPerson(id int) (*Person, []*Role, []*Film, error) {
 		"SELECT PersonID, FullName, AlternativeName, Photo, DateOfBirth FROM Person WHERE PersonID = ?",
 		id).Scan(&person.ID, &person.Name, &person.AltName, &person.Photo, &person.Date)
 	if err != nil {
-		log.Println("Error fetching person")
+		log.Println("Error fetching person: " + err.Error())
 		return nil, nil, nil, err
 	}
 

@@ -18,8 +18,10 @@ type Playlist struct {
 }
 
 const (
-	playlistsForFilm    = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
-	PlaylistsForProfile = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
+	playlistsForFilm      = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
+	PlaylistsForProfile   = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
+	playlistLikeAmount    = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE"
+	playlistDislikeAmount = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE"
 )
 
 func FetchPlaylists(query string, id int) ([]*Playlist, error) {
@@ -29,7 +31,7 @@ func FetchPlaylists(query string, id int) ([]*Playlist, error) {
 		query,
 		id)
 	if err != nil {
-		log.Println("Error fetching roles")
+		log.Println("Error fetching playlists: " + err.Error())
 		return nil, err
 	}
 
@@ -39,7 +41,7 @@ func FetchPlaylists(query string, id int) ([]*Playlist, error) {
 
 		err = results.Scan(&playlist.ID, &playlist.Title, &playlist.Rating)
 		if err != nil {
-			log.Println("Error fetching roles")
+			log.Println("Error fetching playlists: " + err.Error())
 			return nil, err
 		}
 
@@ -57,20 +59,16 @@ func FetchPlaylist(id int) (*Playlist, error) {
 		id).
 		Scan(&playlist.ID, &playlist.Title, &playlist.Description, &playlist.UserName)
 	if err != nil {
-		log.Println("Error fetching person")
+		log.Println("Error fetching playlist: " + err.Error())
 		return nil, err
 	}
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE", id).Scan(&playlist.LikeAmount)
+	err = getRating(playlistLikeAmount, id, &playlist.LikeAmount)
 	if err != nil {
-		log.Println("Error fetching person" + err.Error())
 		return nil, err
 	}
 
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE", id).Scan(&playlist.DislikeAmount)
+	err = getRating(playlistDislikeAmount, id, &playlist.DislikeAmount)
 	if err != nil {
-		log.Println("Error fetching person")
 		return nil, err
 	}
 
@@ -78,7 +76,7 @@ func FetchPlaylist(id int) (*Playlist, error) {
 		"SELECT inter.FilmID, f.FullName, f.ProductionYear, getFilmRating(f.FilmID) FROM (SELECT FilmID FROM Playlist_Film_INT WHERE PlaylistID = ?) AS inter LEFT JOIN Film AS f ON inter.FilmID = f.FilmID",
 		id)
 	if err != nil {
-		log.Println("Error fetching roles")
+		log.Println("Error fetching playlist's films: " + err.Error())
 		return nil, err
 	}
 
@@ -88,7 +86,7 @@ func FetchPlaylist(id int) (*Playlist, error) {
 
 		err = results.Scan(&film.ID, &film.Name, &film.Year, &film.Rating)
 		if err != nil {
-			log.Println("Error fetching roles")
+			log.Println("Error fetching playlist's films: " + err.Error())
 			return nil, err
 		}
 
@@ -106,15 +104,18 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 		Isolation: sql.LevelSerializable,
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error adding playlist: " + err.Error())
+		return err
 	}
 	var playlistID int
 	err = tx.QueryRow(
 		"SELECT `AUTO_INCREMENT` FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'Film_Rec_System' AND TABLE_NAME = 'Playlist'").
 		Scan(&playlistID)
 	if err != nil {
+		log.Println("Error adding playlist: " + err.Error())
 		errRollback := tx.Rollback()
 		if errRollback != nil {
+			log.Println("Error adding playlist: " + errRollback.Error())
 			return errRollback
 		}
 		return err
@@ -129,8 +130,10 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 			playlist.Title, playlist.Description.String, userID)
 	}
 	if err != nil {
+		log.Println("Error adding playlist: " + err.Error())
 		errRollback := tx.Rollback()
 		if errRollback != nil {
+			log.Println("Error adding playlist: " + errRollback.Error())
 			return errRollback
 		}
 		return err
@@ -139,8 +142,10 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 		_, err = tx.ExecContext(ctx, "INSERT INTO Playlist_Film_INT(FilmID, PlaylistID) VALUES (?, ?)",
 			film.ID, playlistID)
 		if err != nil {
+			log.Println("Error adding playlist: " + err.Error())
 			errRollback := tx.Rollback()
 			if errRollback != nil {
+				log.Println("Error adding playlist: " + errRollback.Error())
 				return errRollback
 			}
 			return err
@@ -154,6 +159,7 @@ func DeletePlaylist(playlistId, userId int) error {
 	_, err := db.Exec("DELETE FROM Playlist WHERE PlaylistID = ? AND UserID = ?",
 		playlistId, userId)
 	if err != nil {
+		log.Println("Error deleting playlist: " + err.Error())
 		return err
 	}
 	return err

@@ -9,7 +9,7 @@ import (
 func getCategories(ctx *gin.Context) {
 	genres, countries, err := database.FetchCategories()
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "не удалось получить категории"})
 		return
 	}
 	if genres == nil {

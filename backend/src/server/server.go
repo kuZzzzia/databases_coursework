@@ -1,6 +1,7 @@
 package server
 
 import (
+	"../config"
 	"../database"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -48,13 +49,13 @@ func setUpRouter() *gin.Engine {
 	return router
 }
 
-func Start() {
+func Start(cnf *config.Config) {
 	jwtSetup()
 
-	database.OpenDBConnection()
+	database.OpenDBConnection(cnf)
 	defer database.GetDBConnection().Close()
 
 	router := setUpRouter()
 
-	router.Run(":8000")
+	router.Run(cnf.PortServerBackend)
 }

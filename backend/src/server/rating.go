@@ -16,13 +16,13 @@ func rate(ctx *gin.Context) {
 	paramID := ctx.Param("id")
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid" + rate.Src + "ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
 
 	user, err := currentUser(ctx)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "нет доступа, авторизуйтесь"})
 		return
 	}
 	var query string
@@ -31,11 +31,11 @@ func rate(ctx *gin.Context) {
 	} else if rate.Src == "playlist" {
 		query = database.AddRatingToPlaylist
 	} else {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "This service is unavailable"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
-	if err := database.AddRate(query, user.ID, rate.Like, id); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err = database.AddRating(query, user.ID, rate.Like, id); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "не удалось поставить оценку"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -46,13 +46,13 @@ func rate(ctx *gin.Context) {
 func getRating(ctx *gin.Context) {
 	rate := new(database.Rate)
 	if err := ctx.Bind(rate); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверно заполнена форма"})
 		return
 	}
 	paramID := ctx.Param("id")
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid" + rate.Src + "ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
 	user, err := currentUser(ctx)
@@ -66,12 +66,12 @@ func getRating(ctx *gin.Context) {
 	} else if rate.Src == "playlist" {
 		query = database.GetUserRatingOfPlaylist
 	} else {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "This service is unavailable"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
-	rating, err := database.GetUserRate(query, user.ID, id)
+	rating, err := database.GetRatingByUser(query, user.ID, id)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "не удалось получить информацию об оценке"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{

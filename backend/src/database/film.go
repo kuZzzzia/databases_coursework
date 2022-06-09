@@ -28,6 +28,13 @@ type CastItem struct {
 	Character sql.NullString
 }
 
+const (
+	queryFilmGenres    = "SELECT GenreName FROM Film_Genres WHERE FilmID = ?"
+	queryFilmCountries = "SELECT CountryName FROM Film_Countries WHERE FilmID = ?"
+	filmLikeAmount     = "SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = TRUE"
+	filmDislikeAmount  = "SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = FALSE"
+)
+
 func FetchFilms(search *Search) ([]*Film, error) {
 	var (
 		films   []*Film
@@ -64,7 +71,7 @@ func FetchFilms(search *Search) ([]*Film, error) {
 		results, err = db.Query(query)
 	}
 	if err != nil {
-		log.Println("Error fetching films")
+		log.Println("Error fetching films: " + err.Error())
 		return nil, err
 	}
 
@@ -75,7 +82,7 @@ func FetchFilms(search *Search) ([]*Film, error) {
 
 		err = results.Scan(&film.ID, &film.Name, &film.AltName, &film.Poster, &film.Duration, &film.Year, &film.Rating)
 		if err != nil {
-			log.Println("Error fetching films")
+			log.Println("Error fetching films: " + err.Error())
 			return nil, err
 		}
 
@@ -92,7 +99,7 @@ func FetchFilmByDirector(id int) ([]*Film, error) {
 		"SELECT FilmID, FullName, ProductionYear, getFilmRating(FilmID) FROM Film WHERE PersonID = ? ORDER BY ProductionYear DESC",
 		id)
 	if err != nil {
-		log.Println("Error fetching films")
+		log.Println("Error fetching film by director: " + err.Error())
 		return nil, err
 	}
 
@@ -102,7 +109,7 @@ func FetchFilmByDirector(id int) ([]*Film, error) {
 
 		err = results.Scan(&film.ID, &film.Name, &film.Year, &film.Rating)
 		if err != nil {
-			log.Println("Error fetching films")
+			log.Println("Error fetching film by director: " + err.Error())
 			return nil, err
 		}
 
@@ -111,7 +118,55 @@ func FetchFilmByDirector(id int) ([]*Film, error) {
 	return films, nil
 }
 
-func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
+func fetchFilmCast(id int) ([]*CastItem, error) {
+	var cast []*CastItem
+	results, err := db.Query(
+		"SELECT PersonID, FullName, CharacterName FROM Film_Cast WHERE FilmID = ?",
+		id)
+	if err != nil {
+		log.Println("Error fetching film's cast: " + err.Error())
+		return nil, err
+	}
+	defer results.Close()
+	for results.Next() {
+		castItem := new(CastItem)
+
+		err = results.Scan(&castItem.ID, &castItem.Name, &castItem.Character)
+		if err != nil {
+			log.Println("Error fetching film's cast: " + err.Error())
+			return nil, err
+		}
+
+		cast = append(cast, castItem)
+	}
+	return cast, nil
+}
+
+func fetchFilmCategory(query string, id int) ([]string, error) {
+	var items []string
+	results, err := db.Query(
+		query,
+		id)
+	if err != nil {
+		log.Println("Error fetching film's category: " + err.Error())
+		return nil, err
+	}
+	defer results.Close()
+	for results.Next() {
+		var item string
+
+		err = results.Scan(&item)
+		if err != nil {
+			log.Println("Error fetching film's category: " + err.Error())
+			return nil, err
+		}
+
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Comment, error) {
 	film := new(Film)
 
 	err := db.QueryRow(
@@ -121,87 +176,38 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 			&film.Poster, &film.Description, &film.Duration,
 			&film.Year, &film.DirectorID, &film.Director)
 	if err != nil {
-		log.Println("Error fetching person")
+		log.Println("Error fetching film content: " + err.Error())
 		return nil, nil, nil, nil, err
 	}
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = TRUE", id).Scan(&film.LikeAmount)
+
+	err = getRating(filmLikeAmount, id, &film.LikeAmount)
 	if err != nil {
-		log.Println("Error fetching person" + err.Error())
 		return nil, nil, nil, nil, err
 	}
 
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = FALSE", id).Scan(&film.DislikeAmount)
+	err = getRating(filmDislikeAmount, id, &film.DislikeAmount)
 	if err != nil {
-		log.Println("Error fetching person")
 		return nil, nil, nil, nil, err
 	}
 
-	var cast []*CastItem
-	results, err := db.Query(
-		"SELECT PersonID, FullName, CharacterName FROM Film_Cast WHERE FilmID = ?",
-		id)
+	cast, err := fetchFilmCast(id)
 	if err != nil {
-		log.Println("Error fetching films" + err.Error())
 		return nil, nil, nil, nil, err
 	}
-	defer results.Close()
-	for results.Next() {
-		castItem := new(CastItem)
 
-		err = results.Scan(&castItem.ID, &castItem.Name, &castItem.Character)
-		if err != nil {
-			log.Println("Error fetching films" + err.Error())
-			return nil, nil, nil, nil, err
-		}
-
-		cast = append(cast, castItem)
-	}
-
-	results, err = db.Query(
-		"SELECT CountryName FROM Film_Countries WHERE FilmID = ?",
-		id)
+	film.Countries, err = fetchFilmCategory(queryFilmCountries, id)
 	if err != nil {
-		log.Println("Error fetching films" + err.Error())
 		return nil, nil, nil, nil, err
 	}
-	defer results.Close()
-	for results.Next() {
-		var country string
 
-		err = results.Scan(&country)
-		if err != nil {
-			log.Println("Error fetching films" + err.Error())
-			return nil, nil, nil, nil, err
-		}
-
-		film.Countries = append(film.Countries, country)
-	}
-
-	results, err = db.Query(
-		"SELECT GenreName FROM Film_Genres WHERE FilmID = ?",
-		id)
+	film.Genres, err = fetchFilmCategory(queryFilmGenres, id)
 	if err != nil {
-		log.Println("Error fetching films" + err.Error())
 		return nil, nil, nil, nil, err
-	}
-	defer results.Close()
-	for results.Next() {
-		var genre string
-
-		err = results.Scan(&genre)
-		if err != nil {
-			log.Println("Error fetching films" + err.Error())
-			return nil, nil, nil, nil, err
-		}
-
-		film.Genres = append(film.Genres, genre)
 	}
 
 	playlists, _ := FetchPlaylists(playlistsForFilm, id)
 
-	discussion, err := FetchDiscussionsForFilm(id)
+	discussion, err := FetchCommentsForFilm(id)
 	if err != nil {
 		return nil, nil, nil, nil, err
 	}

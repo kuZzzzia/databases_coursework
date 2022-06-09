@@ -14,28 +14,37 @@ const (
 	GetUserRatingOfPlaylist = "SELECT Score FROM PlaylistScore WHERE UserID = ? AND PlaylistID = ?"
 )
 
-func AddRate(query string, userID int, likeStatus bool, destID int) error {
+func AddRating(query string, userID int, likeStatus bool, destID int) error {
 	_, err := db.Exec(query,
 		userID, destID, likeStatus, likeStatus)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Error adding rating: " + err.Error())
 		return err
 	}
 	return err
 }
 
-func GetUserRate(query string, userID, srcID int) (int, error) {
+func GetRatingByUser(query string, userID, srcID int) (int, error) {
 	res := 0
 	err := db.QueryRow(
 		query,
 		userID, srcID).
 		Scan(&res)
 	if err != nil {
-		log.Println("Error fetching person" + err.Error())
+		log.Println("Error fetching rating: " + err.Error())
 		return 0, err
 	}
 	if res == 0 {
 		return -1, nil
 	}
 	return res, nil
+}
+
+func getRating(query string, id int, amount *int) error {
+	err := db.QueryRow(query, id).Scan(amount)
+	if err != nil {
+		log.Println("Error getting rating: " + err.Error())
+		return err
+	}
+	return nil
 }

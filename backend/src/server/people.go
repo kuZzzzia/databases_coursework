@@ -11,12 +11,12 @@ func getPeople(ctx *gin.Context) {
 	search := new(database.Search)
 	var err error
 	if err = ctx.Bind(search); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 	}
 	var people []*database.Person
 
 	if people, err = database.FetchPeople(search.Pattern); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "не удалось найти людей"})
 		return
 	}
 	if people == nil {
@@ -31,12 +31,12 @@ func getPerson(ctx *gin.Context) {
 	paramID := ctx.Param("id")
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
 	person, roles, films, err := database.FetchPerson(id)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "No person with such ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "такой страницы не существует"})
 		return
 	}
 	if roles == nil {

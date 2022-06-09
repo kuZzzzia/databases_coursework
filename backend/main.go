@@ -1,7 +1,10 @@
 package main
 
-import "./src/server"
+import (
+	"./src/config"
+	"./src/server"
+)
 
 func main() {
-	server.Start()
+	server.Start(config.GenerateConfig())
 }

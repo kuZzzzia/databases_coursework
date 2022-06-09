@@ -1,6 +1,8 @@
 package database
 
-import "log"
+import (
+	"log"
+)
 
 const (
 	queryGenres    = "SELECT GenreName FROM Genre"
@@ -11,7 +13,7 @@ func queryCategory(query string) ([]*string, error) {
 	var items []*string
 	results, err := db.Query(query)
 	if err != nil {
-		log.Println("Error fetching category")
+		log.Println("Error fetching category: " + err.Error())
 		return nil, err
 	}
 
@@ -22,7 +24,7 @@ func queryCategory(query string) ([]*string, error) {
 
 		err = results.Scan(&item)
 		if err != nil {
-			log.Println("Error fetching films")
+			log.Println("Error fetching category: " + err.Error())
 			return nil, err
 		}
 
