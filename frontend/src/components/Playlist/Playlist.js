@@ -3,7 +3,7 @@ import {useState, useCallback, useEffect, useContext} from "react";
 import Errors from "../Errors/Errors";
 import Rate from "../Rate/Rate";
 import AuthContext from '../../db/auth-context';
-import FilmsList from "../Films/FilmsList";
+import FilmsList from "../Film/FilmsList";
 
 const Playlist = (props) => {
     const authContext = useContext(AuthContext);
@@ -70,7 +70,7 @@ const Playlist = (props) => {
     }, [props.id, authContext]);
 
     useEffect(() => {
-        fetchPlaylistHandler();
+        fetchPlaylistHandler().then();
     }, [fetchPlaylistHandler]);
 
     const filmsContent =

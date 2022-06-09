@@ -1,4 +1,4 @@
-import PersonSearch from '../components/People/PersonSearch';
+import PersonSearch from '../components/PeopleSearch/PersonSearch';
 
 const PersonSearchPage = () => {
     return <PersonSearch/>;

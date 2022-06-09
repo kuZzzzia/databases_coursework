@@ -1,4 +1,4 @@
-import Person from '../components/People/Person';
+import Person from '../components/Person/Person';
 import {useParams} from "react-router-dom";
 
 const PersonPage = () => {

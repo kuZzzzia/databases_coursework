@@ -2,8 +2,8 @@ import { useRef, useState, useContext} from "react";
 import { useNavigate } from 'react-router-dom';
 
 import Errors from "../Errors/Errors";
-import FilmSearch from "../Films/FilmSearch";
-import FilmsList from "../Films/FilmsList";
+import FilmSearch from "../FilmSearch/FilmSearch";
+import FilmsList from "../Film/FilmsList";
 import AuthContext from '../../db/auth-context';
 
 const PlayListCreation = () => {

@@ -1,7 +1,7 @@
 import {useState, useCallback, useEffect} from "react";
 
 import RolesList from "./RolesList";
-import FilmsList from "../Films/FilmsList";
+import FilmsList from "../Film/FilmsList";
 import Errors from "../Errors/Errors";
 
 const Person = (props) => {
@@ -42,7 +42,7 @@ const Person = (props) => {
     }, [props.id]);
 
     useEffect(() => {
-        fetchPersonHandler();
+        fetchPersonHandler().then();
     }, [fetchPersonHandler]);
 
 

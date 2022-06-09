@@ -1,4 +1,4 @@
-import FilmSearch from '../components/Films/FilmSearch';
+import FilmSearch from '../components/FilmSearch/FilmSearch';
 
 const FilmSearchPage = () => {
     return <FilmSearch/>;
