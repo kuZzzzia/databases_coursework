@@ -11,7 +11,7 @@ type Config struct {
 func GenerateConfig() (cnf *Config) {
 	cnf = &Config{
 		PortServerBackend: ":8000",
-		UsernameDB:        "maks",
+		UsernameDB:        "user",
 		PasswordDB:        "password",
 		AddressDB:         "127.0.0.1:3306",
 		NameDB:            "Film_Rec_System",
