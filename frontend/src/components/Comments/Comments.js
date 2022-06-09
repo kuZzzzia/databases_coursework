@@ -2,7 +2,7 @@ import {useState} from "react";
 import PostForm from "./PostForm";
 import PostsList from "./PostsList";
 
-const Discussion = (props) => {
+const Comments = (props) => {
     const [posts, setPosts] = useState(props.discussion);
 
     const addPostHandler = (postData) => {
@@ -18,4 +18,4 @@ const Discussion = (props) => {
     );
 };
 
-export default Discussion;
+export default Comments;

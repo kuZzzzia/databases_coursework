@@ -43,7 +43,7 @@ const AuthForm = () => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = loggingIn ? 'Login failed' : 'Sign up failed';
+                let errorText = loggingIn ? 'Не удалось авторизоваться' : 'Не удалось зарегистрироваться';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -61,9 +61,9 @@ const AuthForm = () => {
         }
     }
 
-    const header = loggingIn ? 'Login' : 'Sign up';
-    const mainButtonText = loggingIn ? 'Login' : 'Create account';
-    const switchModeButtonText = loggingIn ? 'Create new account' : 'Login with existing account';
+    const header = loggingIn ? 'Вход' : 'Регистрация';
+    const mainButtonText = loggingIn ? 'Войти' : 'Зарегистрироваться';
+    const switchModeButtonText = loggingIn ? 'Создать аккаунт' : 'Уже есть аккаунт';
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
 
     return (

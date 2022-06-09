@@ -31,7 +31,7 @@ const FilmSearch = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'No actors found';
+                let errorText = 'ошибочный запрос';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -84,7 +84,7 @@ const FilmSearch = (props) => {
 
     const filmsContent = searchStatus ?
         films.length === 0 ?
-            <p>No films found</p>
+            <p>Фильмов по данному запросу не найдено</p>
             :
             props.onAddFilm
                 ? <FilmSearchContainer
@@ -103,7 +103,7 @@ const FilmSearch = (props) => {
     return (
         <section>
             <h1 className="text-center">{header}</h1>
-            <div className="container w-75 pb-5">
+            <div className="container w-75 pb-3">
                 <form onSubmit={submitHandler}>
                     <div className="form-row pb-2">
                         <div className="ml-3 pb-2 col-10 d-flex justify-content-center">
@@ -112,6 +112,8 @@ const FilmSearch = (props) => {
                         <div className="col d-flex justify-content-center">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>
                         </div>
+                    </div>
+                    <div className="form-row pb-2">
                         <div className="form-group ml-3 col-md-4">
                             <label htmlFor="inputState">Жанр</label>
                             <select id="inputState" className="form-control" defaultValue="" ref={genreRef}>

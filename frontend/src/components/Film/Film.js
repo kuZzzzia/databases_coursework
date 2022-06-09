@@ -3,7 +3,7 @@ import {useState, useCallback, useEffect, useContext} from "react";
 import Errors from "../Errors/Errors";
 import PeopleList from "./PeopleList";
 import PlaylistsList from "../Playlist/PlaylistsList"
-import Discussion from "../Discussion/Discussion"
+import Comments from "../Comments/Comments"
 import {Link} from "react-router-dom";
 import Rate from "../Rate/Rate";
 import AuthContext from '../../db/auth-context';
@@ -34,7 +34,7 @@ const Film = (props) => {
             const response = await fetch('/film/' + props.id);
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'No film found';
+                let errorText = 'Фильм не найден';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -84,7 +84,7 @@ const Film = (props) => {
 
     const peopleContent =
         people.length === 0 ?
-            <p className="col">Еще нет назначенных на роли актеров</p>
+            <p className="p-4 col">Еще нет назначенных на роли актеров</p>
             :
             <PeopleList
                 people={people}
@@ -92,7 +92,7 @@ const Film = (props) => {
 
     const playlistsContent =
         playlists.length === 0 ?
-            <p className="col">Нет подборок с данным фильмом</p>
+            <p className="p-4 col">Нет подборок с данным фильмом</p>
             :
             <PlaylistsList
                 playlists={playlists}
@@ -144,7 +144,7 @@ const Film = (props) => {
                 />
                 {peopleContent}
                 {playlistsContent}
-                <Discussion
+                <Comments
                     discussion={discussion}
                     filmID={props.id}
                 />

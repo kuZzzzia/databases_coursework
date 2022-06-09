@@ -31,7 +31,7 @@ const Rate = (props) => {
                 );
                 const data = await response.json();
                 if (!response.ok) {
-                    let errorText = 'Rate failed';
+                    let errorText = 'не удалось оставить оценку';
                     if (!data.hasOwnProperty('error')) {
                         throw new Error(errorText);
                     }
@@ -79,7 +79,7 @@ const Rate = (props) => {
                 );
                 const data = await response.json();
                 if (!response.ok) {
-                    let errorText = 'Rate failed';
+                    let errorText = 'не удалось оставить оценку';
                     if (!data.hasOwnProperty('error')) {
                         throw new Error(errorText);
                     }

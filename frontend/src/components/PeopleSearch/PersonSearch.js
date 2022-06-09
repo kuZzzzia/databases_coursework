@@ -30,7 +30,7 @@ const PersonSearch = () => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'No people found';
+                let errorText = 'ошибочный запрос';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -50,7 +50,7 @@ const PersonSearch = () => {
 
     const peopleContent = searchStatus ?
         people.length === 0 ?
-            <p>No people found</p>
+            <p>Людей по данному запросу не найдено</p>
             :
             <PeopleSearchContainer
                 people={people}
@@ -64,10 +64,10 @@ const PersonSearch = () => {
     return (
         <section>
             <h1 className="text-center">{header}</h1>
-            <div className="container w-75">
+            <div className="container w-75 pb-3">
                 <form onSubmit={submitHandler}>
-                    <div className="form-row">
-                        <div className="ml-3 col-10 d-flex justify-content-center">
+                    <div className="form-row pb-2">
+                        <div className="ml-3 pb-2 col-10 d-flex justify-content-center">
                             <input id="username" type="text" className="form-control" placeholder={"Найти персону..."} required ref={personRef} ></input>
                         </div>
                         <div className="col d-flex justify-content-center">

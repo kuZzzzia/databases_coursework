@@ -40,7 +40,7 @@ const PlayListCreation = () => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'Playlist was not created';
+                let errorText = 'не удалось создать подборку';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }

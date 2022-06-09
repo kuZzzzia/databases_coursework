@@ -75,7 +75,7 @@ const Playlist = (props) => {
 
     const filmsContent =
         films.length === 0 ?
-            <p className="card-text">Нет фильмов в данной подборке</p>
+            <p className="p-3 card-text">Нет фильмов в данной подборке</p>
             :
             <FilmsList
                 films={films}
