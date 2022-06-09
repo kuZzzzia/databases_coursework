@@ -1,7 +1,7 @@
 package server
 
 import (
-	"../database"
+	"film-network/src/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

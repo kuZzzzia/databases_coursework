@@ -1,8 +1,8 @@
 package database
 
 import (
-	"../config"
 	"database/sql"
+	"film-network/src/config"
 	_ "github.com/go-sql-driver/mysql"
 )
 
