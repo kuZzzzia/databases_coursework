@@ -18,6 +18,8 @@ type Film struct {
 	Rating        int
 	LikeAmount    int
 	DislikeAmount int
+	Countries     []string
+	Genres        []string
 }
 
 type CastItem struct {
@@ -157,11 +159,58 @@ func FetchFilm(id int) (*Film, []*CastItem, []*Playlist, []*Message, error) {
 		cast = append(cast, castItem)
 	}
 
+	results, err = db.Query(
+		"SELECT CountryName FROM Film_Countries WHERE FilmID = ?",
+		id)
+	if err != nil {
+		log.Println("Error fetching films" + err.Error())
+		return nil, nil, nil, nil, err
+	}
+	defer results.Close()
+	for results.Next() {
+		var country string
+
+		err = results.Scan(&country)
+		if err != nil {
+			log.Println("Error fetching films" + err.Error())
+			return nil, nil, nil, nil, err
+		}
+
+		film.Countries = append(film.Countries, country)
+	}
+
+	results, err = db.Query(
+		"SELECT GenreName FROM Film_Genres WHERE FilmID = ?",
+		id)
+	if err != nil {
+		log.Println("Error fetching films" + err.Error())
+		return nil, nil, nil, nil, err
+	}
+	defer results.Close()
+	for results.Next() {
+		var genre string
+
+		err = results.Scan(&genre)
+		if err != nil {
+			log.Println("Error fetching films" + err.Error())
+			return nil, nil, nil, nil, err
+		}
+
+		film.Genres = append(film.Genres, genre)
+	}
+
 	playlists, _ := FetchPlaylists(playlistsForFilm, id)
 
 	discussion, err := FetchDiscussionsForFilm(id)
 	if err != nil {
 		return nil, nil, nil, nil, err
+	}
+
+	if film.Genres == nil {
+		film.Genres = []string{}
+	}
+	if film.Countries == nil {
+		film.Countries = []string{}
 	}
 
 	return film, cast, playlists, discussion, nil
