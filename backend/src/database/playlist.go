@@ -18,8 +18,10 @@ type Playlist struct {
 }
 
 const (
-	playlistsForFilm    = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
-	PlaylistsForProfile = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
+	playlistsForFilm      = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
+	PlaylistsForProfile   = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
+	playlistLikeAmount    = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE"
+	playlistDislikeAmount = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE"
 )
 
 func FetchPlaylists(query string, id int) ([]*Playlist, error) {
@@ -60,17 +62,13 @@ func FetchPlaylist(id int) (*Playlist, error) {
 		log.Println("Error fetching playlist: " + err.Error())
 		return nil, err
 	}
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE", id).Scan(&playlist.LikeAmount)
+	err = getRating(playlistLikeAmount, id, &playlist.LikeAmount)
 	if err != nil {
-		log.Println("Error fetching playlist's likes: " + err.Error())
 		return nil, err
 	}
 
-	err = db.QueryRow(
-		"SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE", id).Scan(&playlist.DislikeAmount)
+	err = getRating(playlistDislikeAmount, id, &playlist.DislikeAmount)
 	if err != nil {
-		log.Println("Error fetching playlist's dislikes: " + err.Error())
 		return nil, err
 	}
 

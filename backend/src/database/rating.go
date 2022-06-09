@@ -39,3 +39,12 @@ func GetRatingByUser(query string, userID, srcID int) (int, error) {
 	}
 	return res, nil
 }
+
+func getRating(query string, id int, amount *int) error {
+	err := db.QueryRow(query, id).Scan(amount)
+	if err != nil {
+		log.Println("Error getting rating: " + err.Error())
+		return err
+	}
+	return nil
+}
