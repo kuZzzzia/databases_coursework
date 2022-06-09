@@ -11,12 +11,12 @@ func getFilms(ctx *gin.Context) {
 	search := new(database.Search)
 	var err error
 	if err = ctx.Bind(search); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 	}
 	var films []*database.Film
 
 	if films, err = database.FetchFilms(search); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "не удалось найти фильмы"})
 		return
 	}
 	if films == nil {
@@ -32,13 +32,13 @@ func getFilm(ctx *gin.Context) {
 	paramID := ctx.Param("id")
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not valid ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверный запрос"})
 		return
 	}
 
 	film, cast, playlists, discussion, err := database.FetchFilm(id)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "No person with such ID."})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "такого страницы не существует"})
 		return
 	}
 	if cast == nil {
@@ -48,7 +48,7 @@ func getFilm(ctx *gin.Context) {
 		playlists = []*database.Playlist{}
 	}
 	if discussion == nil {
-		discussion = []*database.Message{}
+		discussion = []*database.Comment{}
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{

@@ -4,7 +4,6 @@ import (
 	"../config"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 )
 
 var db *sql.DB
@@ -14,7 +13,7 @@ func OpenDBConnection(cnf *config.Config) {
 	db, err = sql.Open("mysql", cnf.UsernameDB+":"+cnf.PasswordDB+"@tcp("+cnf.AddressDB+")/"+cnf.NameDB)
 
 	if err != nil {
-		log.Panicln(err.Error())
+		panic("Connection to db failed...")
 	}
 }
 

@@ -12,7 +12,7 @@ import (
 func signUp(ctx *gin.Context) {
 	user := new(database.User)
 	if err := ctx.Bind(user); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверно заполнена форма"})
 		return
 	}
 	if err := database.AddUser(user); err != nil {
@@ -21,7 +21,7 @@ func signUp(ctx *gin.Context) {
 	}
 	user, err := database.Authenticate(user.Username, user.Password)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Sign in failed."})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "не удалось авторизоваться"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -33,12 +33,12 @@ func signUp(ctx *gin.Context) {
 func signIn(ctx *gin.Context) {
 	user := new(database.User)
 	if err := ctx.Bind(user); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "неверно заполнена форма"})
 		return
 	}
 	user, err := database.Authenticate(user.Username, user.Password)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Sign in failed."})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "не удалось авторизоваться"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
@@ -50,16 +50,16 @@ func signIn(ctx *gin.Context) {
 func authorization(ctx *gin.Context) {
 	authHeader := ctx.GetHeader("Authorization")
 	if authHeader == "" {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header missing."})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "пожалуйста, авторизуйтесь"})
 		return
 	}
 	headerParts := strings.Split(authHeader, " ")
 	if len(headerParts) != 2 {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header format is not valid."})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "неудачная попытка авторизации"})
 		return
 	}
 	if headerParts[0] != "Bearer" {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is missing bearer part."})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "неудачная попытка авторизации"})
 		return
 	}
 	userID, err := verifyJWT(headerParts[1])
@@ -69,7 +69,7 @@ func authorization(ctx *gin.Context) {
 	}
 	user, err := database.FetchUser(userID)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "не удалось найти пользователя"})
 		return
 	}
 	ctx.Set("user", user)
