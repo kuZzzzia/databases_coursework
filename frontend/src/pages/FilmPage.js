@@ -1,4 +1,4 @@
-import Film from '../components/Films/Film';
+import Film from '../components/Film/Film';
 import {useParams} from "react-router-dom";
 
 const FilmPage = () => {
