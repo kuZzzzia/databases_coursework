@@ -26,12 +26,41 @@ type CastItem struct {
 	Character sql.NullString
 }
 
-func FetchFilms(pattern string) ([]*Film, error) {
-	var films []*Film
-
-	results, err := db.Query(
-		"SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film WHERE FullName = ? OR AlternativeName = ?",
-		pattern, pattern)
+func FetchFilms(search *Search) ([]*Film, error) {
+	var (
+		films   []*Film
+		results *sql.Rows
+		args    []any
+		err     error
+	)
+	query := "SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film"
+	if len(search.Pattern) != 0 {
+		query += " WHERE FullName = ? OR AlternativeName = ?"
+		args = append(args, search.Pattern, search.Pattern)
+		if len(search.Genre) != 0 {
+			query += " AND Genre = ?"
+			args = append(args, search.Genre)
+		}
+		if len(search.Country) != 0 {
+			query += " AND Country = ?"
+			args = append(args, search.Country)
+		}
+	} else if len(search.Genre) != 0 {
+		query += " WHERE Genre = ?"
+		args = append(args, search.Genre)
+		if len(search.Country) != 0 {
+			query += " ND Country = ?"
+			args = append(args, search.Country)
+		}
+	} else if len(search.Country) != 0 {
+		query += " WHERE Country = ?"
+		args = append(args, search.Country)
+	}
+	if len(args) != 0 {
+		results, err = db.Query(query, args...)
+	} else {
+		results, err = db.Query(query)
+	}
 	if err != nil {
 		log.Println("Error fetching films")
 		return nil, err
