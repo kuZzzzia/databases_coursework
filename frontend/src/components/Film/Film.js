@@ -19,6 +19,8 @@ const Film = (props) => {
         Year: {Int16: 0, Valid: false},
         Duration: {Int16: 0, Valid: false},
         DirectorID: {Int16: 0, Valid: false},
+        Genres: [],
+        Countries: []
     });
     const [people, setPeople] = useState([]);
     const [playlists, setPlaylists] = useState([]);
@@ -96,6 +98,7 @@ const Film = (props) => {
                 playlists={playlists}
             />;
 
+    console.log(film)
     const poster = '/' + film.Poster;
     const name = film.Name;
     const altName = film.AltName.Valid ? film.AltName.String : '';
