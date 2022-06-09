@@ -103,6 +103,8 @@ const Film = (props) => {
     const director = film.Director.Valid ? 'Режиссер' + film.Director.String : '';
     const duration = film.Duration.Valid ? 'Продолжительность: ' + film.Duration.Int16 + ' минут' : '';
     const year = film.Year.Valid ? 'Год производства: ' + film.Year.Int16 : '';
+    const genres = film.Genres.length !== 0 ? 'Жанры: ' + film.Genres.join(', ') : '';
+    const countries = film.Countries.length !== 0 ? 'Страны производства: ' + film.Countries.join(', ') : '';
     const directorContent = film.DirectorID.Valid ?
         <div className="row">
             <p className="card-text">{director}</p>
@@ -123,6 +125,8 @@ const Film = (props) => {
                         <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
                         <p className="card-text">{year}</p>
                         <p className="card-text">{duration}</p>
+                        <p className="card-text">{genres}</p>
+                        <p className="card-text">{countries}</p>
                         <p className="card-text">{description}</p>
                         {directorContent}
                     </div>
