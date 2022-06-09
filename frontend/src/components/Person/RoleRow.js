@@ -18,7 +18,7 @@ const RoleRow = (props) => {
                     Имя персонажа: {props.role.Name.String}
                 </div> : <div></div>}
             <div className="col-sm">
-                <Link className="card-link-link" to={'/film/'+props.role.FilmID}>View more</Link>
+                <Link className="card-link-link" to={'/film/'+props.role.FilmID}>Подробнее</Link>
             </div>
         </div>
     )

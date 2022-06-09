@@ -14,7 +14,7 @@ const PersonCard = (props) => {
                 <h5 className="card-title">{name}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">{altName}</h6>
                 <p className="card-text">{date}</p>
-                <Link className="card-link-link" to={id}>View more</Link>
+                <Link className="card-link-link" to={id}>Подробнее</Link>
             </div>
         </div>
     );

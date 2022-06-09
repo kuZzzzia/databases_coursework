@@ -31,7 +31,7 @@ const FilmSearch = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'No actors found';
+                let errorText = 'ошибочный запрос';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -84,7 +84,7 @@ const FilmSearch = (props) => {
 
     const filmsContent = searchStatus ?
         films.length === 0 ?
-            <p>No films found</p>
+            <p>Фильмов по данному запросу не найдено</p>
             :
             props.onAddFilm
                 ? <FilmSearchContainer
@@ -96,14 +96,14 @@ const FilmSearch = (props) => {
                 />
         : <p></p>;
 
-    const header = 'Films';
-    const mainButtonText = 'Search';
+    const header = 'Фильмы';
+    const mainButtonText = 'Поиск';
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
 
     return (
         <section>
             <h1 className="text-center">{header}</h1>
-            <div className="container w-75 pb-5">
+            <div className="container w-75 pb-3">
                 <form onSubmit={submitHandler}>
                     <div className="form-row pb-2">
                         <div className="ml-3 pb-2 col-10 d-flex justify-content-center">
@@ -112,10 +112,12 @@ const FilmSearch = (props) => {
                         <div className="col d-flex justify-content-center">
                             <button type="submit" className="btn btn-success mb-2">{mainButtonText}</button>
                         </div>
+                    </div>
+                    <div className="form-row pb-2">
                         <div className="form-group ml-3 col-md-4">
                             <label htmlFor="inputState">Жанр</label>
                             <select id="inputState" className="form-control" defaultValue="" ref={genreRef}>
-                                <option value="" disabled>Выбрать...</option>
+                                <option value="" >Выбрать...</option>
                                 {genres.map((genre) => (
                                     <option value={genre}>{genre}</option>
                                 ))}
@@ -124,7 +126,7 @@ const FilmSearch = (props) => {
                         <div className="form-group ml-3 col-md-4">
                             <label htmlFor="inputState">Страна</label>
                             <select id="inputState" className="form-control" defaultValue="" ref={countryRef}>
-                                <option value="" disabled>Выбрать...</option>
+                                <option value="" >Выбрать...</option>
                                 {countries.map((country) => (
                                     <option value={country}>{country}</option>
                                 ))}

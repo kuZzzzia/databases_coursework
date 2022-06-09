@@ -3,7 +3,7 @@ import PersonRow from "./PersonRow";
 const PeopleList = (props) => {
     return (
         <div>
-            <h5>Персонажи</h5>
+            <h5>В ролях</h5>
             <div className="col">
 
                 {props.people.map((person) => (

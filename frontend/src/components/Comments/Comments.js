@@ -2,7 +2,7 @@ import {useState} from "react";
 import PostForm from "./PostForm";
 import PostsList from "./PostsList";
 
-const Discussion = (props) => {
+const Comments = (props) => {
     const [posts, setPosts] = useState(props.discussion);
 
     const addPostHandler = (postData) => {
@@ -11,11 +11,11 @@ const Discussion = (props) => {
 
     return (
         <section>
-            <h5 className="pb-4 pt-4">Discussion</h5>
+            <h5 className="pb-4 pt-4">Комментарии</h5>
             <PostsList posts={posts}/>
             <PostForm onAddPost={addPostHandler} filmID={props.filmID}/>
         </section>
     );
 };
 
-export default Discussion;
+export default Comments;

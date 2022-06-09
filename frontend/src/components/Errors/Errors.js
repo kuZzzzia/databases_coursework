@@ -5,7 +5,7 @@ const Errors = (errors) => {
     }
     return (
         <div className="mt-3">
-            {errorList.map(error => <p className="alert alert-danger">{error}</p>)}
+            {errorList.map(error => <p className="alert alert-danger">Ошибка: {error}</p>)}
         </div>
     )
 }

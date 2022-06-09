@@ -28,7 +28,7 @@ const User = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'Error, while fetching info about playlists';
+                let errorText = 'не удалось получить информацию о плейлистах';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -65,7 +65,7 @@ const User = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'Failed to delete playlist.';
+                let errorText = 'не удалось удалить плейлист';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -105,7 +105,7 @@ const User = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'Failed to add user.';
+                let errorText = 'не удалось удалить пользователя';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -146,7 +146,7 @@ const User = (props) => {
                 </div>
                 {playlistsContent}
             </div>
-            : <div>Processing...</div>
+            : <div>Обработка...</div>
         : Errors(errors);
 
     return (

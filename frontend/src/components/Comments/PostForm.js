@@ -42,7 +42,7 @@ const PostForm = (props) => {
             );
             const data = await response.json();
             if (!response.ok) {
-                let errorText = 'Failed to add new post.';
+                let errorText = 'не удалось добавить комментарий';
                 if (!data.hasOwnProperty('error')) {
                     throw new Error(errorText);
                 }
@@ -66,13 +66,13 @@ const PostForm = (props) => {
     const contentChangeHandler = (event) => { setContentValue(event.target.value) }
 
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
-    const submitButtonText = 'Add Post';
+    const submitButtonText = 'Отправить';
 
     return (
 
             <div className="container w-75">
                 <form className="form-inline" onSubmit={submitHandler}>
-                    <input id="content" className="form-control flex-fill mr-2" required value={contentValue} placeholder="Message" onChange={contentChangeHandler}></input>
+                    <input id="content" className="form-control flex-fill mr-2" required value={contentValue} placeholder="Комментарий..." onChange={contentChangeHandler}></input>
                     <button type="submit" className="btn btn-success">{submitButtonText}</button>
                 </form>
                 {errorContent}

@@ -31,7 +31,7 @@ const Rate = (props) => {
                 );
                 const data = await response.json();
                 if (!response.ok) {
-                    let errorText = 'Rate failed';
+                    let errorText = 'не удалось оставить оценку';
                     if (!data.hasOwnProperty('error')) {
                         throw new Error(errorText);
                     }
@@ -79,7 +79,7 @@ const Rate = (props) => {
                 );
                 const data = await response.json();
                 if (!response.ok) {
-                    let errorText = 'Rate failed';
+                    let errorText = 'не удалось оставить оценку';
                     if (!data.hasOwnProperty('error')) {
                         throw new Error(errorText);
                     }
@@ -115,10 +115,10 @@ const Rate = (props) => {
             <div className="row h-50 ml-4 p-4 ">
                 <div className="btn-group" role="group" aria-label="Rate">
                     <button type="button" className="btn btn-success" onClick={handleLike}>
-                        Like | {state.Like}
+                        Нравится | {state.Like}
                     </button>
                     <button type="button" className="btn btn-danger" onClick={handleDislike}>
-                        Dislike | {state.Dislike}
+                        Не нравится | {state.Dislike}
                     </button>
                 </div>
             </div>
