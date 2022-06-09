@@ -37,7 +37,7 @@ func FetchFilms(search *Search) ([]*Film, error) {
 	)
 	query := "SELECT FilmID, FullName, AlternativeName, Poster, Duration, ProductionYear, getFilmRating(FilmID) FROM Film AS f"
 	if len(search.Pattern) != 0 {
-		query += " WHERE FullName = ? OR AlternativeName = ?"
+		query += " WHERE (FullName = ? OR AlternativeName = ?)"
 		args = append(args, search.Pattern, search.Pattern)
 		if len(search.Genre) != 0 {
 			query += " AND EXISTS(SELECT * FROM Film_Genres AS g WHERE GenreName = ? AND g.FilmID = f.FilmID)"
@@ -48,7 +48,7 @@ func FetchFilms(search *Search) ([]*Film, error) {
 			args = append(args, search.Country)
 		}
 	} else if len(search.Genre) != 0 {
-		query += " WHERE EXISTS(SELECT * FROM Film_Genres AS g WHERE GenreName = ? AND g.FilmID = f.FilmID"
+		query += " WHERE EXISTS(SELECT * FROM Film_Genres AS g WHERE GenreName = ? AND g.FilmID = f.FilmID)"
 		args = append(args, search.Genre)
 		if len(search.Country) != 0 {
 			query += " AND EXISTS(SELECT * FROM Film_Countries AS c WHERE CountryName = ? AND c.FilmID = f.FilmID)"
