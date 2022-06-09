@@ -96,8 +96,8 @@ const FilmSearch = (props) => {
                 />
         : <p></p>;
 
-    const header = 'Films';
-    const mainButtonText = 'Search';
+    const header = 'Фильмы';
+    const mainButtonText = 'Поиск';
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
 
     return (
@@ -115,7 +115,7 @@ const FilmSearch = (props) => {
                         <div className="form-group ml-3 col-md-4">
                             <label htmlFor="inputState">Жанр</label>
                             <select id="inputState" className="form-control" defaultValue="" ref={genreRef}>
-                                <option value="" disabled>Выбрать...</option>
+                                <option value="" >Выбрать...</option>
                                 {genres.map((genre) => (
                                     <option value={genre}>{genre}</option>
                                 ))}
@@ -124,7 +124,7 @@ const FilmSearch = (props) => {
                         <div className="form-group ml-3 col-md-4">
                             <label htmlFor="inputState">Страна</label>
                             <select id="inputState" className="form-control" defaultValue="" ref={countryRef}>
-                                <option value="" disabled>Выбрать...</option>
+                                <option value="" >Выбрать...</option>
                                 {countries.map((country) => (
                                     <option value={country}>{country}</option>
                                 ))}

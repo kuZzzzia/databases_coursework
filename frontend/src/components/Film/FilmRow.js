@@ -14,7 +14,7 @@ const FilmRow = (props) => {
                 {props.film.Rating !== -1 ? 'Рейтинг: ' + props.film.Rating + '%' : 'Нет оценки'}
             </div>
             <div className="col-sm">
-                <Link className="card-link-link" to={'/film/'+props.film.ID}>View more</Link>
+                <Link className="card-link-link" to={'/film/'+props.film.ID}>Подробнее</Link>
             </div>
         </div>
     )

@@ -57,8 +57,8 @@ const PersonSearch = () => {
             />
         : <p></p>;
 
-    const header = 'People';
-    const mainButtonText = 'Search';
+    const header = 'Персоны';
+    const mainButtonText = 'Поиск';
     const errorContent = Object.keys(errors).length === 0 ? null : Errors(errors);
 
     return (

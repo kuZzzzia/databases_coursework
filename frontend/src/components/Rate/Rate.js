@@ -115,10 +115,10 @@ const Rate = (props) => {
             <div className="row h-50 ml-4 p-4 ">
                 <div className="btn-group" role="group" aria-label="Rate">
                     <button type="button" className="btn btn-success" onClick={handleLike}>
-                        Like | {state.Like}
+                        Нравится | {state.Like}
                     </button>
                     <button type="button" className="btn btn-danger" onClick={handleDislike}>
-                        Dislike | {state.Dislike}
+                        Не нравится | {state.Dislike}
                     </button>
                 </div>
             </div>

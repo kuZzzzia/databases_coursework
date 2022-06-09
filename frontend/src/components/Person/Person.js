@@ -89,7 +89,7 @@ const Person = (props) => {
                    {rolesContent}
                </div>
            </div>
-           : <div>Processing...</div>
+           : <div>Обработка...</div>
         : Errors(errors);
 
     return (

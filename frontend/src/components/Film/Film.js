@@ -103,15 +103,15 @@ const Film = (props) => {
     const name = film.Name;
     const altName = film.AltName.Valid ? film.AltName.String : '';
     const description = film.Description.Valid ? film.Description.String : '';
-    const director = film.Director.Valid ? 'Режиссер' + film.Director.String : '';
+    const director = film.Director.Valid ? 'Режиссер: ' + film.Director.String : '';
     const duration = film.Duration.Valid ? 'Продолжительность: ' + film.Duration.Int16 + ' минут' : '';
     const year = film.Year.Valid ? 'Год производства: ' + film.Year.Int16 : '';
     const genres = film.Genres.length !== 0 ? 'Жанры: ' + film.Genres.join(', ') : '';
     const countries = film.Countries.length !== 0 ? 'Страны производства: ' + film.Countries.join(', ') : '';
     const directorContent = film.DirectorID.Valid ?
         <div className="row">
-            <p className="card-text">{director}</p>
-            <Link className="card-link-link" to={'/person/' + film.DirectorID.Int16}>View more</Link>
+            <p className="card-text p-2">{director}</p>
+            <Link className="card-link-link" to={'/person/' + film.DirectorID.Int16}>Подробнее</Link>
         </div>
         : <div></div>;
 
@@ -149,7 +149,7 @@ const Film = (props) => {
                     filmID={props.id}
                 />
             </div>
-            : <div>Processing...</div>
+            : <div>Обработка...</div>
         : Errors(errors);
 
     return (

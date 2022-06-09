@@ -101,7 +101,7 @@ const Playlist = (props) => {
                     ID={props.id}
                 />
             </div>
-            : <div>Processing...</div>
+            : <div>Обработка...</div>
         : Errors(errors);
 
     return (

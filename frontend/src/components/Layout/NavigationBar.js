@@ -25,16 +25,16 @@ const NavigationBar = () => {
                 <div className="d-flex flex-row">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/">FILM RECOMMENDATION SYSTEM</Link>
+                            <Link className="nav-link" to="/">КИНОСЕТЬ</Link>
                         </li>
                         {loggedIn && (
                             <li className="nav-item">
-                                <Link className="nav-link" to="/profile">My profile</Link>
+                                <Link className="nav-link" to="/profile">Мой профиль</Link>
                             </li>
                         )}
                         {loggedIn && (
                             <li className="nav-item">
-                                <Link className="nav-link" to="/profile/playlist">Create playlist</Link>
+                                <Link className="nav-link" to="/profile/playlist">Создать подборку</Link>
                             </li>
                         )}
                     </ul>
@@ -42,19 +42,19 @@ const NavigationBar = () => {
                 <div className="d-flex flex-row justify-content-end">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <Link className="nav-link" to="/people">People</Link>
+                            <Link className="nav-link" to="/people">Персоны</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/films">Films</Link>
+                            <Link className="nav-link" to="/films">Фильмы</Link>
                         </li>
                         {!loggedIn && (
                             <li className="nav-item">
-                                <Link className="nav-link" to="/auth">Login</Link>
+                                <Link className="nav-link" to="/auth">Войти</Link>
                             </li>
                         )}
                         {loggedIn && (
                             <li className="nav-item">
-                                <button className="btn btn-dark" onClick={logoutHandler}>LOGOUT</button>
+                                <button className="btn btn-dark" onClick={logoutHandler}>Выйти</button>
                             </li>
                         )}
                     </ul>

@@ -7,7 +7,7 @@ const PersonRow = (props) => {
                 {props.person.Name}
             </div>
             <div className="col-md-auto">
-                <Link className="card-link-link" to={'/person/'+props.person.ID}>View more</Link>
+                <Link className="card-link-link" to={'/person/'+props.person.ID}>Подробнее</Link>
             </div>
             {props.person.Character.Valid
                 ? <div className="col-sm">Имя персонажа: {props.person.Character.String}</div>

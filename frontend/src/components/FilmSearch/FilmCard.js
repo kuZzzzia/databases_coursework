@@ -27,9 +27,8 @@ const FilmCard = (props) => {
                     </p> : <p className="card-text">Нет оценки</p>}
                 { props.onAddFilm
                     ? <button className="btn btn-primary" onClick={submitHandler}>Добавить</button>
-                    : <Link className="card-link-link" to={id}>View more</Link>
+                    : <Link className="card-link-link" to={id}>Подробнее</Link>
                 }
-
             </div>
         </div>
     );

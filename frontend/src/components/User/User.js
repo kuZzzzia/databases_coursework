@@ -146,7 +146,7 @@ const User = (props) => {
                 </div>
                 {playlistsContent}
             </div>
-            : <div>Processing...</div>
+            : <div>Обработка...</div>
         : Errors(errors);
 
     return (

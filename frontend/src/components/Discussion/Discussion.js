@@ -11,7 +11,7 @@ const Discussion = (props) => {
 
     return (
         <section>
-            <h5 className="pb-4 pt-4">Discussion</h5>
+            <h5 className="pb-4 pt-4">Комментарии</h5>
             <PostsList posts={posts}/>
             <PostForm onAddPost={addPostHandler} filmID={props.filmID}/>
         </section>

@@ -72,11 +72,11 @@ const AuthForm = () => {
             <div className="container w-50">
                 <form onSubmit={submitHandler}>
                     <div className="form-group pb-3">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Имя пользователя</label>
                         <input id="username" type="text" className="form-control" required ref={usernameRef} ></input>
                     </div>
                     <div className="form-group pb-3">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Пароль</label>
                         <input id="password" type="password" className="form-control" required ref={passwordRef} ></input>
                     </div>
                     <div className="pt-3 d-flex justify-content-between">
