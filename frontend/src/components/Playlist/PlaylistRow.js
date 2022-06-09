@@ -10,7 +10,7 @@ const PlaylistRow = (props) => {
                 {props.playlist.Title}
             </div>
             <div className="col-md-auto">
-                <Link className="card-link-link" to={'/playlist/'+ props.playlist.ID}>View more</Link>
+                <Link className="card-link-link" to={'/playlist/'+ props.playlist.ID}>Подробнее</Link>
             </div>
             <div className="col-sm">
                 {props.playlist.Rating !== -1 ? 'Рейтинг: ' + props.playlist.Rating + '%' : 'Нет оценки'}
