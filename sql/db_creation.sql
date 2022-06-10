@@ -124,10 +124,10 @@ CREATE VIEW Film_With_Director AS
     SELECT f.FilmID, f.FullName, f.AlternativeName, f.Poster, f.`Description`, f.Duration, f.ProductionYear, f.PersonID, p.FullName AS PersonName FROM Film AS f LEFT JOIN Person AS p on f.PersonID = p.PersonID;
 
 CREATE VIEW Film_Cast AS
-    SELECT f.FilmID, f.FullName AS FilmName,f.ProductionYear, r.CharacterName, r.PersonID, p.FullName FROM Role AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID LEFT JOIN Film AS f on r.FilmID = f.FilmID;
+    SELECT f.FilmID, f.FullName AS FilmName, f.ProductionYear, r.CharacterName, r.PersonID, p.FullName FROM Role AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID LEFT JOIN Film AS f on r.FilmID = f.FilmID;
 
 CREATE VIEW Film_Comments_With_Users AS
-    SELECT f.FilmID, d.CommentID, d.Review, d.Date, d.UserID, u.Username FROM Comment AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
+    SELECT c.FilmID, c.CommentID, c.Review, c.Date, c.UserID, u.Username FROM Comment AS c LEFT JOIN User AS u ON u.UserID = c.UserID;
 
 CREATE VIEW Film_Genres AS
     SELECT inter.FilmID, g.GenreName FROM Genre_Film_INT AS inter LEFT JOIN Genre AS g on inter.GenreID = g.GenreID;
