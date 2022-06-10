@@ -107,25 +107,16 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 		log.Println("Error adding playlist: " + err.Error())
 		return err
 	}
-	var playlistID int
-	err = tx.QueryRow(
-		"SELECT `AUTO_INCREMENT` FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'Film_Rec_System' AND TABLE_NAME = 'Playlist'").
-		Scan(&playlistID)
-	if err != nil {
-		log.Println("Error adding playlist: " + err.Error())
-		errRollback := tx.Rollback()
-		if errRollback != nil {
-			log.Println("Error adding playlist: " + errRollback.Error())
-			return errRollback
-		}
-		return err
-	}
+	var (
+		playlistID int64
+		res        sql.Result
+	)
 	if len(playlist.Description.String) == 0 {
-		_, err = tx.ExecContext(ctx,
+		res, err = tx.ExecContext(ctx,
 			"INSERT INTO Playlist(PlaylistTitle, UserID) VALUES (?, ?)",
 			playlist.Title, userID)
 	} else {
-		_, err = tx.ExecContext(ctx,
+		res, err = tx.ExecContext(ctx,
 			"INSERT INTO Playlist(PlaylistTitle, `Description`, UserID) VALUES (?, ?, ?)",
 			playlist.Title, playlist.Description.String, userID)
 	}
@@ -138,21 +129,30 @@ func AddPlaylist(playlist *Playlist, userID int) error {
 		}
 		return err
 	}
+	playlistID, err = res.LastInsertId()
+	if err != nil {
+		log.Println("Error adding playlist: " + err.Error())
+		errRollback := tx.Rollback()
+		if errRollback != nil {
+			log.Println("Error adding playlist: " + errRollback.Error())
+			return errRollback
+		}
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		log.Println("Error adding playlist: " + err.Error())
+		return err
+	}
 	for _, film := range playlist.Films {
-		_, err = tx.ExecContext(ctx, "INSERT INTO Playlist_Film_INT(FilmID, PlaylistID) VALUES (?, ?)",
+		_, err = db.Exec("INSERT INTO Playlist_Film_INT(FilmID, PlaylistID) VALUES (?, ?)",
 			film.ID, playlistID)
 		if err != nil {
 			log.Println("Error adding playlist: " + err.Error())
-			errRollback := tx.Rollback()
-			if errRollback != nil {
-				log.Println("Error adding playlist: " + errRollback.Error())
-				return errRollback
-			}
 			return err
 		}
 	}
-	err = tx.Commit()
-	return err
+	return nil
 }
 
 func DeletePlaylist(playlistId, userId int) error {
