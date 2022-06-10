@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const PersonCard = (props) => {
-    const photo = props.person.Photo;
+    const photo = '/' + props.person.Photo;
     const name = props.person.Name;
     const altName = props.person.AltName.Valid ? props.person.AltName.String : '';
     const date = props.person.Date.Valid ? 'Дата рождения: ' + props.person.Date.String : '';

@@ -67,8 +67,8 @@ CREATE TABLE Film_Rec_System.User (
     `Hash` blob NOT NULL
 );
 
-CREATE TABLE Film_Rec_System.Discussion (
-    `DiscussionID` int AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Film_Rec_System.Comment (
+    `CommentID` int AUTO_INCREMENT PRIMARY KEY,
     `Date` date NOT NULL,
     `Review` text NOT NULL,
     `UserID` int,
@@ -79,11 +79,10 @@ CREATE TABLE Film_Rec_System.Discussion (
         ON DELETE CASCADE
 );
 
-CREATE TABLE Film_Rec_System.View (
+CREATE TABLE Film_Rec_System.FilmRating (
     `UserID` int,
     `FilmID` int,
-    `LastViewDate` date NULL,
-    `FilmScore` bool NOT NULL,
+    `Rating` bool NOT NULL,
     PRIMARY KEY (`UserID`, `FilmID`),
     FOREIGN KEY (`UserID`) REFERENCES Film_Rec_System.User(`UserID`)
         ON DELETE CASCADE,
@@ -110,10 +109,10 @@ CREATE TABLE Film_Rec_System.Playlist_Film_INT (
         ON DELETE CASCADE
 );
 
-CREATE TABLE Film_Rec_System.PlaylistScore (
+CREATE TABLE Film_Rec_System.PlaylistRating (
     `UserID` int,
     `PlaylistID` int,
-    `Score` bool NOT NULL,
+    `Rating` bool NOT NULL,
     PRIMARY KEY (`UserID`, `PlaylistID`),
     FOREIGN KEY (`UserID`) REFERENCES Film_Rec_System.User(`UserID`)
         ON DELETE CASCADE,
@@ -127,8 +126,8 @@ CREATE VIEW Film_With_Director AS
 CREATE VIEW Film_Cast AS
     SELECT f.FilmID, f.FullName AS FilmName,f.ProductionYear, r.CharacterName, r.PersonID, p.FullName FROM Role AS r LEFT JOIN Person AS p ON r.PersonID = p.PersonID LEFT JOIN Film AS f on r.FilmID = f.FilmID;
 
-CREATE VIEW Film_Discussion_With_Users AS
-    SELECT f.FilmID, d.DiscussionID, d.Review, d.Date, d.UserID, u.Username FROM Discussion AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
+CREATE VIEW Film_Comments_With_Users AS
+    SELECT f.FilmID, d.CommentID, d.Review, d.Date, d.UserID, u.Username FROM Comment AS d LEFT JOIN Film AS f on d.FilmID = f.FilmID LEFT JOIN User AS u ON u.UserID = d.UserID;
 
 CREATE VIEW Film_Genres AS
     SELECT inter.FilmID, g.GenreName FROM Genre_Film_INT AS inter LEFT JOIN Genre AS g on inter.GenreID = g.GenreID;
@@ -151,7 +150,7 @@ CREATE FUNCTION getFilmRating(id int)
         DECLARE total float;
         DECLARE ret int DEFAULT -1;
         CREATE TEMPORARY TABLE TempTableForFilmRating(Rate BOOL);
-        INSERT INTO TempTableForFilmRating SELECT FilmScore FROM View WHERE FilmID = id;
+        INSERT INTO TempTableForFilmRating SELECT Rating FROM FilmRating WHERE FilmID = id;
         SELECT Count(*) INTO likeAmount FROM TempTableForFilmRating WHERE Rate = TRUE;
         SELECT Count(*) INTO total FROM TempTableForFilmRating;
         DROP TEMPORARY TABLE TempTableForFilmRating;
@@ -168,7 +167,7 @@ BEGIN
     DECLARE total float;
     DECLARE ret int DEFAULT -1;
     CREATE TEMPORARY TABLE TempTableForPlaylistRating(Rate BOOL);
-    INSERT INTO TempTableForPlaylistRating SELECT Score FROM PlaylistScore WHERE PlaylistID = id;
+    INSERT INTO TempTableForPlaylistRating SELECT Rating FROM PlaylistRating WHERE PlaylistID = id;
     SELECT Count(*) INTO likeAmount FROM TempTableForPlaylistRating WHERE Rate = TRUE;
     SELECT Count(*) INTO total FROM TempTableForPlaylistRating;
     DROP TEMPORARY TABLE TempTableForPlaylistRating;
