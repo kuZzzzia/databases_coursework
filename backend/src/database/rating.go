@@ -8,10 +8,10 @@ type Rate struct {
 }
 
 const (
-	AddRatingToFilm         = "INSERT INTO View(UserID, FilmID, FilmScore) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE FilmScore = ?"
-	AddRatingToPlaylist     = "INSERT INTO PlaylistScore(UserID, PlaylistID, Score) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE Score = ?"
-	GetUserRatingOfFilm     = "SELECT FilmScore FROM View WHERE UserID = ? AND FilmID = ?"
-	GetUserRatingOfPlaylist = "SELECT Score FROM PlaylistScore WHERE UserID = ? AND PlaylistID = ?"
+	AddRatingToFilm         = "INSERT INTO FilmRating(UserID, FilmID, Rating) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE Rating = ?"
+	AddRatingToPlaylist     = "INSERT INTO PlaylistRating(UserID, PlaylistID, Rating) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE Rating = ?"
+	GetUserRatingOfFilm     = "SELECT Rating FROM FilmRating WHERE UserID = ? AND FilmID = ?"
+	GetUserRatingOfPlaylist = "SELECT Rating FROM PlaylistRating WHERE UserID = ? AND PlaylistID = ?"
 )
 
 func AddRating(query string, userID int, likeStatus bool, destID int) error {

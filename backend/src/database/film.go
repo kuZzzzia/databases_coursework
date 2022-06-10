@@ -31,8 +31,8 @@ type CastItem struct {
 const (
 	queryFilmGenres    = "SELECT GenreName FROM Film_Genres WHERE FilmID = ?"
 	queryFilmCountries = "SELECT CountryName FROM Film_Countries WHERE FilmID = ?"
-	filmLikeAmount     = "SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = TRUE"
-	filmDislikeAmount  = "SELECT COUNT(*) FROM View WHERE FilmID = ? AND FilmScore = FALSE"
+	filmLikeAmount     = "SELECT COUNT(*) FROM FilmRating WHERE FilmID = ? AND Rating = TRUE"
+	filmDislikeAmount  = "SELECT COUNT(*) FROM FilmRating WHERE FilmID = ? AND Rating = FALSE"
 )
 
 func FetchFilms(search *Search) ([]*Film, error) {
