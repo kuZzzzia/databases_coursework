@@ -20,8 +20,8 @@ type Playlist struct {
 const (
 	playlistsForFilm      = "SELECT p.PlaylistID, p.PlaylistTitle, getPlaylistRating(p.PlaylistID) AS rate FROM Playlists_For_Film as p WHERE p.FilmID = ? ORDER BY rate DESC"
 	PlaylistsForProfile   = "SELECT PlaylistID, PlaylistTitle, getPlaylistRating(PlaylistID) FROM Playlist WHERE UserID = ? ORDER BY PlaylistID DESC"
-	playlistLikeAmount    = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = TRUE"
-	playlistDislikeAmount = "SELECT COUNT(*) FROM PlaylistScore WHERE PlaylistID = ? AND Score = FALSE"
+	playlistLikeAmount    = "SELECT COUNT(*) FROM PlaylistRating WHERE PlaylistID = ? AND Rating = TRUE"
+	playlistDislikeAmount = "SELECT COUNT(*) FROM PlaylistRating WHERE PlaylistID = ? AND Rating = FALSE"
 )
 
 func FetchPlaylists(query string, id int) ([]*Playlist, error) {

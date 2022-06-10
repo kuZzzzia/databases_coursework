@@ -16,7 +16,7 @@ func FetchCommentsForFilm(id int) ([]*Comment, error) {
 	var discussion []*Comment
 
 	results, err := db.Query(
-		"SELECT DiscussionID, Review, Username FROM Film_Discussion_With_Users WHERE FilmID = ? ORDER BY DiscussionID DESC",
+		"SELECT CommentID, Review, Username FROM Film_Comments_With_Users WHERE FilmID = ? ORDER BY CommentID DESC",
 		id)
 	if err != nil {
 		log.Println("Error fetching comments: " + err.Error())
@@ -43,7 +43,7 @@ func AddComment(user *User, comment *Comment, filmID int) error {
 		String: user.Username,
 		Valid:  true,
 	}
-	_, err := db.Exec("INSERT INTO Discussion(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
+	_, err := db.Exec("INSERT INTO `Comment`(`Date`, Review, UserID, FilmID) VALUES (NOW(), ?, ?, ?)",
 		comment.Review, user.ID, filmID)
 	if err != nil {
 		log.Println("Error adding comment to film: " + err.Error())
